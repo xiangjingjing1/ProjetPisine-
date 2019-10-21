@@ -1,0 +1,8 @@
+{
+    "rules": {
+        "curly": true,
+        "arrow-parens": true,
+        "arrow-return-shorthand": true,
+        "semicolon": true
+    }
+}
