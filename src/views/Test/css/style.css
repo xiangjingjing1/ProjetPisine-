@@ -1,0 +1,100 @@
+canvas {
+    display: block;
+    margin: 2em;
+}
+.bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+body {
+    background-image: -webkit-linear-gradient(bottom, #d7dde6 40%, #97a8c0 80%);
+    background-image: linear-gradient(to top, #d7dde6 40%, #97a8c0 80%);
+    background-size: cover;
+    width: 200vw;
+    height: 200vh;
+}
+#logo{
+  width: 300px;
+  height: auto;
+  //background-attachment: fixed;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+.login_fields input[type='text']{
+  color: #afb1be;
+  width: 250px;
+  margin-top: -5px;
+  background: rgba(57, 61, 82, 0);
+  left: 0;
+  padding: 13px 35px;
+  border-top: 2px solid rgba(57, 61, 82, 0);
+  border-bottom: 2px solid rgba(57, 61, 82, 0);
+  border-right: none;
+  border-left: none;
+  outline: none;
+  font-family: 'Gudea', sans-serif;
+  box-shadow: none;
+  font-size: 16px;
+}
+.login_fields_submit input{
+  border-radius: 50px;
+  background: transparent;
+  padding: 10px 50px;
+  border: 2px solid #4FA1D9;
+  color: #4FA1D9;
+  text-transform: uppercase;
+  font-size: 14px;
+  transition-duration: .2s;
+  font-family: 'Cantarell', sans-serif;
+}
+.login{
+  box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+  opacity: 1;
+  -webkit-transition-timing-function: cubic-bezier(0.68, -0.25, 0.265, 0.85);
+  transition-property: transform, opacity, box-shadow, top, left;
+  transform-origin: 161px 100%;
+  transform: rotateX(0deg);
+  width: 390px;
+  height: 300px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  padding: 40px 40px 40px 40px;
+  background: linear-gradient(230deg, rgba(53, 57, 74, 0) 0%, rgb(0, 0, 0) 100%);
+  font-family: 'Cantarell', sans-serif;
+  margin-top: 300px;
+}
+.login_fields_submit{
+  position: relative;
+  top: 17px;
+  left: 50px;
+  width: 80%;
+  right: 0;
+  margin: auto;
+  font-family: 'Cantarell', sans-serif;
+}
+.login_title{
+  padding-bottom: 40px;
+  color: #D3D7F7;
+  height: 60px;
+  font-size: 23px;
+  text-align: center;
+}
+#slogen h1{
+  font-family: 'Gloria Hallelujah', cursive;
+  position: absolute;
+  transform: translate(-50%, 50%);
+  left: 50%;
+  color: #0E3C5E;
+}
+#slogen{
+  text-align: center;
+}
