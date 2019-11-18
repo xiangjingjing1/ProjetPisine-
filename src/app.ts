@@ -1,7 +1,7 @@
 import express from "express";
 import * as models from './models';
 import passport from 'passport';
-import mustacheExpress from 'mustache-express';
+import exphbs from 'express-handlebars';
 import setupMiddlewares from './middlewares';
 import {ensureLoggedIn, ensureLoggedOut} from 'connect-ensure-login';
 
@@ -12,9 +12,9 @@ models.init().then(() => {
     /**
      * Configurate server
      */
-    app.engine('mustache', mustacheExpress());
+    app.engine('handlebars', exphbs());
 
-    app.set('view engine', 'mustache');
+    app.set('view engine', 'handlebars');
     app.set('views', __dirname + '/../src/views');
 
     setupMiddlewares(app);

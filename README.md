@@ -10,7 +10,7 @@ Ce site web tourne sous [Node.JS](https://nodejs.org), les packages principaux u
  * [Express](https://www.npmjs.com/package/express) : un package permettant de gérer les requêtes effectuées sur le serveur (routes, middlewares, etc ...).
  * [Sequelize](https://www.npmjs.com/package/sequelize) : un package mettant à disposition un ORM compatible avec diverses bases de données (Postgres, MySQL, MariaDB, SQLite, Microsoft SQL Server).
  * [Passport](https://www.npmjs.com/package/passport) : un package permettant de mettre en place un middleware gérant l'authentification des utilisateurs.
- * [Mustache](https://www.npmjs.com/package/mustache) : un package implémentant le support pour l'utilisation du langage de template [mustache](http://mustache.github.com/).
+ * [Handlebars](https://www.npmjs.com/package/express-handlebars) : un package implémentant le support pour l'utilisation du langage de template [handlebars](https://handlebarsjs.com/).
 
  Dans la mesure du possible, le code est écrit en [TypeScript](https://www.typescriptlang.org/).
 
