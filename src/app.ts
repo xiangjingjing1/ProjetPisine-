@@ -27,11 +27,9 @@ models.init().then(() => {
         successRedirect: '/',
         failureRedirect: '/login'
     }));
-    app.get('/login', ensureLoggedOut() ,(req, res) => res.render('login'));
-    app.get('/', (req, res) => {
-        res.send('Hello world!');
-    });
-    app.get('/profil', ensureLoggedIn(), (req, res) => res.render('profil', { user: req.user }));
+    app.get('/login', ensureLoggedOut() ,(req, res) => res.render('login', { name: "Se connecter" }));
+    app.get('/', ensureLoggedIn(), (req, res) => res.render('index', { name: "Tableau de bord" }));
+    app.get('/profil', ensureLoggedIn(), (req, res) => res.render('profil', { name: "Profil", user: req.user }));
 
     /**
      * Start server

@@ -1,13 +1,15 @@
+<h1>Se connecter</h1>
+
 <form action="/login" method="post">
-    <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
+    <div class="form-group">
+        <label for="emailField">Email :</label>
+        <input id="emailField" type="text" name="username" class="form-control" aria-describedby="emailHelp" placeholder="Votre email"/>
+        <small id="emailHelp" class="form-text text-muted">Remplissez avec votre mail universitaire</small>
     </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
+    <div class="form-group">
+        <label for="passwordField">Mot de passe:</label>
+        <input id="passwordField" type="password" name="password" class="form-control" placeholder="Mot de passe"/>
     </div>
-    <div>
-        <input type="submit" value="Log In"/>
-    </div>
+    <button type="submit" class="btn btn-primary">Se connecter</button>
 </form>
+
