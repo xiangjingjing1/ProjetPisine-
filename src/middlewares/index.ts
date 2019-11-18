@@ -8,5 +8,5 @@ export default function setupMiddlewares(app: Express) {
     /**
      * Middleware used to serve static files (css files, client js files, images, etc...) in an effective way
      */
-    app.use(staticMiddleware('public'));
+    app.use(staticMiddleware('static'));
 }
