@@ -2,6 +2,7 @@ module.exports = function(grunt) {
     "use strict";
 
     const sass = require('dart-sass');
+    const webpackConfig = require('./webpack.config');
   
     grunt.initConfig({
       ts: {
@@ -61,6 +62,9 @@ module.exports = function(grunt) {
             dest: "public/css"
           }]
         }
+      },
+      webpack: {
+        myConfig: webpackConfig
       }
     });
   
@@ -69,12 +73,14 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-tslint");
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-webpack");
   
     grunt.registerTask("default", [
       "ts",
       "tslint",
       "sass",
-      "cssmin"
+      "cssmin",
+      "webpack"
     ]);
   
   };
