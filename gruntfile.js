@@ -32,12 +32,29 @@ module.exports = function(grunt) {
           src: ["src/\*\*/\*.ts"]
         }
       },
+
+
       watch: {
         ts: {
-          files: ["js/src/\*\*/\*.ts", "src/\*\*/\*.ts"],
-          tasks: ["ts", "tslint"]
+          files: ["src/\*\*/\*.ts"],
+          tasks: ["ts", "tslint", "express:dev"],
+          options: {
+            spawn: false,
+          },
+        },
+        sass: {
+          files: ["static/scss/*.scss"],
+          tasks: ["sass", "cssmin"],
+          livereload: true,
+        },
+        webpack: {
+          files: ["static/js/*.js"],
+          tasks: ["webpack"],
+          livereload: true,
         }
       },
+
+
       sass: {
         options: {
           implementation: sass,
@@ -53,6 +70,7 @@ module.exports = function(grunt) {
           }]
         }
       },
+
       cssmin: {
         target: {
           files: [{
@@ -63,8 +81,19 @@ module.exports = function(grunt) {
           }]
         }
       },
+
       webpack: {
         myConfig: webpackConfig
+      },
+
+
+      express: {
+        dev: {
+          options: {
+            port: 8000,
+            script: "./dist/app.js"
+          }
+        }
       }
     });
   
@@ -74,13 +103,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-sass");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-webpack");
-  
+    grunt.loadNpmTasks('grunt-express-server');
+
     grunt.registerTask("default", [
       "ts",
       "tslint",
       "sass",
       "cssmin",
-      "webpack"
+      "webpack",
+      "express:dev",
+      "watch"
     ]);
   
   };
