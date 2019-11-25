@@ -4,6 +4,7 @@ import passport from 'passport';
 import exphbs from 'express-handlebars';
 import setupMiddlewares from './middlewares';
 import {ensureLoggedIn, ensureLoggedOut} from 'connect-ensure-login';
+import helpers from "./helpers";
 
 const app = express();
 const port = 8000;
@@ -12,7 +13,9 @@ models.init().then(() => {
     /**
      * Configurate server
      */
-    app.engine('handlebars', exphbs());
+    app.engine('handlebars', exphbs({
+        helpers,
+    }));
 
     app.set('view engine', 'handlebars');
     app.set('views', __dirname + '/../src/views');
