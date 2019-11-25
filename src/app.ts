@@ -22,14 +22,20 @@ models.init().then(() => {
     /**
      * Define routes
      */
+    app.get('/', ensureLoggedIn(), (req, res) => res.render('index', { name: "Tableau de bord" }));
 
+    app.get('/login', ensureLoggedOut() ,(req, res) => res.render('login', { name: "Se connecter" }));
     app.post('/login', ensureLoggedOut(), passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/login'
     }));
-    app.get('/login', ensureLoggedOut() ,(req, res) => res.render('login', { name: "Se connecter" }));
-    app.get('/', ensureLoggedIn(), (req, res) => res.render('index', { name: "Tableau de bord" }));
-    app.get('/profil', ensureLoggedIn(), (req, res) => res.render('profil', { name: "Profil", user: req.user }));
+    
+    app.get('/logout', (req, res) => {
+        req.logout();
+        res.redirect("/login");
+    });
+
+    app.get('/profil', ensureLoggedIn(), (req, res) => res.render('profil', { name: "Profil" }));
 
     /**
      * Start server

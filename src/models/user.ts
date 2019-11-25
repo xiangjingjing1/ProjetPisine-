@@ -6,7 +6,13 @@ const secret_key = process.env.SECRET_KEY ? process.env.SECRET_KEY : "no secret 
 if (secret_key == "no secret key" && process.env.NODE_ENV == "production") {
     console.error("PLEASE ! Specify a secret key using environment variable SECRET_KEY.");
 }
-const hash = crypto.createHmac('sha512', secret_key);
+
+function hashPassword(password: string): string {
+    const hash = crypto.createHmac('sha512', secret_key);
+    hash.update(password);
+    return hash.digest("base64");
+}
+
 
 class User extends sq.Model {
     public id!: number;
@@ -18,14 +24,18 @@ class User extends sq.Model {
 
     public static createSafe(firstname: string, lastname: string, password: string, email: string, isAdmin?: boolean): Promise<User> {
         isAdmin = isAdmin ? true : false;
-        hash.update(password);
         return User.create({
             firstname,
             lastname,
-            password: hash.digest('base64'),
+            password: hashPassword(password),
             email,
             isAdmin,
         });
+    }
+
+    public checkPassword(password: string): boolean {
+        let hashedPassword = hashPassword(password);
+        return this.password == hashedPassword;
     }
 }
 
