@@ -114,5 +114,10 @@ module.exports = function(grunt) {
       "express:dev",
       "watch"
     ]);
+
+    grunt.registerTask("admin", [
+      "ts",
+      "tslint"
+    ]);
   
   };
