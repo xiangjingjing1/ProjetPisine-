@@ -102,6 +102,9 @@ function listAdminUsers() {
         admins.forEach((admin) => {
             console.log(`- ${admin.firstname} ${admin.lastname} (${admin.email})`);
         });
+        if (admins.length == 0) {
+            console.log("No admin user.");
+        }
         rl.close();
     });
 }
