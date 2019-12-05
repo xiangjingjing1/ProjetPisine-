@@ -4,6 +4,7 @@ import passport from 'passport';
 import exphbs from 'express-handlebars';
 import setupMiddlewares from './middlewares';
 import {ensureLoggedIn, ensureLoggedOut} from 'connect-ensure-login';
+import onUserRegister from "./controllers/register";
 
 const app = express();
 const port = 8000;
@@ -27,11 +28,20 @@ models.init().then(() => {
     app.get('/register', ensureLoggedOut(), (req, res) => {
         res.render('register', { name: "S'inscrire" });
     });
+    app.post("/register", ensureLoggedOut(), (req, res) => {
+        onUserRegister(req, res);
+    });
 
-    app.get('/login', ensureLoggedOut(), (req, res) => res.render('login', { name: "Se connecter" }));
+    app.get('/login', ensureLoggedOut(), (req, res) => {
+        res.render('login', { 
+            name: "Se connecter", 
+            successes: req.query.fromRegister !== undefined ? ["Vous êtes inscrit. Vous pouvez maintenant vous connecter."] : [],
+            errors: req.query.error !== undefined ? ["Mauvaise combinaison email/mot de passe. Ré-essayez."] : [],
+        });
+    });
     app.post('/login', ensureLoggedOut(), passport.authenticate('local', {
         successRedirect: '/',
-        failureRedirect: '/login'
+        failureRedirect: '/login?error'
     }));
     
     app.get('/logout', (req, res) => {
