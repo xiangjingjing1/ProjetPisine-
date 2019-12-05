@@ -8,13 +8,16 @@ export default function setupAuthMiddleware(app: Express) {
     /**
      * Set strategy to check user credentials.
      */
-    passport.use(new LocalStrategy((username, password, done) => {
+    passport.use(new LocalStrategy({
+        usernameField: 'email',
+        passwordField: 'password',
+    }, (email, password, done) => {
         User.findOne({
             where: {
-                name: username,
+                email,
             }
         }).then((user) => {
-            if(user.password == password) { // TODO: hash password before comparing
+            if(user.checkPassword(password)) {
                 done(null, user);
             } else {
                 done(null, false, {message: 'Incorrect password !'});
@@ -62,4 +65,12 @@ export default function setupAuthMiddleware(app: Express) {
      */
     app.use(passport.initialize());
     app.use(passport.session());
+
+    /**
+     * Used to be able to access user object in template files
+     */
+    app.use((req, res, next) => {
+        res.locals.user = req.user;
+        next();
+    });
 }

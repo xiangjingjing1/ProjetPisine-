@@ -11,6 +11,13 @@
     <body>
         {{> navbar}}
         <div class="container">
+            <br />
+            {{#each successes}}
+                {{> alertSuccess success=this}}
+            {{/each}}
+            {{#each errors}}
+                {{> alertError error=this}}
+            {{/each}}
             {{{body}}}
         </div>
         <script type="text/javascript" src="/static/js/bootstrap.js"></script>

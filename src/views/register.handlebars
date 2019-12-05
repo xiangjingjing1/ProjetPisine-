@@ -1,0 +1,150 @@
+<h1>S'inscrire</h1>
+
+<form action="/register" method="post">
+
+    <div class="form-group">
+        <label for="firstnameField">Prénom :</label>
+        <input id="firstnameField" type="text" name="firstname" class="form-control" placeholder="Prénom" required />
+    </div>
+
+    <div class="form-group">
+        <label for="lastnameField">Nom de famille :</label>
+        <input id="lastnameField" type="text" name="lastname" class="form-control" placeholder="Nom de famille" required />
+    </div>
+
+    <div class="form-row">
+        <div class="col">
+            <label for="specialtyNameField">Section :</label>
+            <select id="specialtyNameField" name="specialtyName" class="form-control" disabled></select>
+        </div>
+        <div class="col">
+            <label for="specialtyYearField">Année :</label>
+            <select id="specialtyYearField" name="specialtyYear" class="form-control" disabled></select>
+        </div>
+        <div class="col">
+            <label for="groupField">Groupe :</label>
+            <select id="groupField" name="group" class="form-control" disabled></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="emailField">Email :</label>
+        <input id="emailField" type="text" name="email" class="form-control" aria-describedby="emailHelp" placeholder="Votre email" required/>
+        <small id="emailHelp" class="form-text text-muted">Remplissez avec votre mail universitaire</small>
+    </div>
+
+    <div class="form-group">
+        <label for="passwordField">Mot de passe:</label>
+        <input id="passwordField" type="password" name="password" class="form-control" placeholder="Mot de passe" minlength="10" required/>
+        <small id="passwordHelp" class="form-text text-danger"></small>
+    </div>
+
+    <div class="form-group">
+        <label for="passwordConfirmField">Confirmation du mot de passe :</label>
+        <input id="passwordConfirmField" type="password" name="passwordConfirm" class="form-control" placeholder="Confirmation du mot de passe" required/>
+        <small id="passwordConfirmHelp" class="form-text"></small>
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submitButton" disabled>S'inscrire</button>
+</form>
+
+<script>
+    // Password validation
+    var passwordField = document.getElementById("passwordField");
+    var passConfirmField = document.getElementById("passwordConfirmField");
+    var passHelp = document.getElementById("passwordHelp");
+    var passConfirmHelp = document.getElementById("passwordConfirmHelp");
+    var submitButton = document.getElementById("submitButton");
+
+    var cb = function() {
+        if(passwordField.value.length < 10 && passwordField.value.length > 0) {
+            passHelp.innerHTML = "Votre mot de passe est trop court, il doit faire au moins 10 caratères.";
+        } else {
+            passHelp.innerText = "";
+        }
+
+        if(passwordField.value.length == 0) {
+            passConfirmHelp.innerText = "";
+            submitButton.disabled = true;
+        } else if (passwordField.value != passConfirmField.value) {
+            submitButton.disabled = true
+            passConfirmHelp.innerText = "Les mots de passe ne sont pas identiques"
+            if (!passConfirmHelp.classList.contains("text-danger")) {
+                passConfirmHelp.classList.remove("text-success");
+                passConfirmHelp.classList.add("text-danger");
+            }
+        } else {
+            submitButton.disabled = false
+            passConfirmHelp.innerText = "Mots de passe correspondants"
+            if (!passConfirmHelp.classList.contains("text-success")) {
+                passConfirmHelp.classList.remove("text-danger");
+                passConfirmHelp.classList.add("text-success");
+            }
+        }
+    };
+
+    passwordField.addEventListener("input", cb);
+    passConfirmField.addEventListener("input", cb);
+
+    // Specialties and groups fetching
+    Promise.all([fetch("/api/groups"), fetch("/api/specialties")]).then((responses) => {
+        Promise.all(responses.map((response) => response.json())).then((jsons) => {
+            let groups = {};
+            for (i in jsons[0]) {
+                let group = jsons[0][i];
+                if (groups[group.specialty] === undefined) {
+                    groups[group.specialty] = [];
+                }
+                groups[group.specialty].push(group.num);
+            }
+
+            let specialtiesNames = [];
+            let specialtiesToYears = {};
+            let speNameYearToId = {};
+
+            for (i in jsons[1]) {
+                let specialty = jsons[1][i]
+                if (!specialtiesNames.includes(specialty.name)) {
+                    specialtiesNames.push(specialty.name);
+                    specialtiesToYears[specialty.name] = [];
+                }
+                specialtiesToYears[specialty.name].push(specialty.year);
+                speNameYearToId[`${specialty.name}${specialty.year}`] = specialty.id;
+            }
+
+            let specialtyNameField = document.getElementById("specialtyNameField");
+            let specialtyYearField = document.getElementById("specialtyYearField");
+            let groupField = document.getElementById("groupField");
+
+            let onYearChange = (year) => {
+                groupField.innerHTML = "";
+                let name = specialtyNameField.value;
+                let speId = speNameYearToId[`${name}${year}`];
+                let speGroups = groups[speId];
+                if (speGroups !== undefined) {
+                    groupField.innerHTML = speGroups.map((group) => `<option>${group}</option>`);
+                }
+            };
+
+            let onSpeNameChange = (name) => {
+                specialtyYearField.innerHTML = "";
+                let years = specialtiesToYears[name];
+                if (years !== undefined) {
+                    specialtyYearField.innerHTML = years.map((year) => `<option>${year}</option>`);
+                    onYearChange(specialtyYearField.value);
+                }
+            };
+
+            specialtyNameField.addEventListener("change", (e) => onSpeNameChange(e.target.value));
+            specialtyYearField.addEventListener("change", (e) => onYearChange(e.target.value));
+
+            specialtyNameField.innerHTML = specialtiesNames.map((name) => `<option>${name}</option>`);
+
+            specialtyNameField.disabled = false;
+            specialtyYearField.disabled = false;
+            groupField.disabled = false;
+            onSpeNameChange(specialtyNameField.value);
+
+        }).catch((error) => console.error(error));
+    }).catch((error) => console.error(error));
+</script>

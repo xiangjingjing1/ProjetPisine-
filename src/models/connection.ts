@@ -2,7 +2,8 @@ import {Sequelize} from 'sequelize';
 
 const sequelize = new Sequelize({
     dialect: 'sqlite',
-    storage: 'db.sqlite'
+    storage: 'db.sqlite',
+    logging: process.env.LOG_SQL == "1",
 });
 
 sequelize.authenticate()

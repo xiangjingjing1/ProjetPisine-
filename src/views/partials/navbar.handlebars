@@ -1,8 +1,19 @@
 <nav class="navbar navbar-dark bg-dark sticky-top">
     <a class="navbar-brand" href="/">TOEIC</a>
+
+    {{#if user}}
+
     <div class="form-inline">
-      <a class="nav-item nav-link active" href="/login">Se connecter</a>
-      <a class="nav-item nav-link" href="#">S'inscrire</a>
+      <a class="nav-item nav-link" href="/logout">Se déconnecter</a>
     </div>
+
+    {{else}}
+
+    <div class="form-inline">
+      <a class="nav-item nav-link" href="/login">Se connecter</a>
+      <a class="nav-item nav-link" href="/register">S'inscrire</a>
+    </div>
+
+    {{/if}}
     
 </nav>
