@@ -1,13 +1,13 @@
 import sq from "sequelize";
 import sequelize from "./connection";
-import Speciality from "./speciality";
+import Specialty from "./speciality";
 import User from "./user";
 
 class Group extends sq.Model {
 
     public id!: number;
     public num!: number;
-    public specialityId!: number;
+    public specialtyId!: number;
 
 }
 
@@ -20,7 +20,7 @@ Group.init({
     timestamps: false,
 });
 
-Group.belongsTo(Speciality);
-Group.belongsToMany(User, {through: "UserGroup"});
+Group.belongsTo(Specialty, { as: "specialty" });
+Group.belongsToMany(User, { through: "UserGroup" });
 
 export default Group;

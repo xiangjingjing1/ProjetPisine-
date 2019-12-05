@@ -1,7 +1,7 @@
 import sq from "sequelize";
 import sequelize from "./connection";
 
-class Speciality extends sq.Model {
+class Specialty extends sq.Model {
 
     public id!: number;
     public name!: String;
@@ -9,7 +9,7 @@ class Speciality extends sq.Model {
 
 }
 
-Speciality.init({
+Specialty.init({
     name: {
         type: sq.STRING,
         allowNull: false,
@@ -30,4 +30,4 @@ Speciality.init({
     timestamps: false,
 });
 
-export default Speciality;
+export default Specialty;
