@@ -1,4 +1,4 @@
-import {User, init} from "./models";
+import {User, Group, Specialty, init} from "./models";
 import readline from "readline";
 
 console.log("Starting admin manager ...");
@@ -18,6 +18,7 @@ function showMenu() {
     console.log("1. Create admin user");
     console.log("2. List admin users");
     console.log("3. Remove admin user");
+    console.log("4. Generate default specialties and groups");
     console.log("\n");
 
     rl.question("Enter action to execute (number): ", (answer) => {
@@ -30,6 +31,9 @@ function showMenu() {
                 break;
             case "3":
                 removeAdminUser();
+                break;
+            case "4":
+                createGroupsAndSpecialties();
                 break;
             default:
                 console.log("Unvalid option. Exiting.");
@@ -118,4 +122,57 @@ function removeAdminUser() {
             rl.close();
         });
     });
+}
+
+function createGroupsAndSpecialties() {
+
+    let createAll = async function() {
+        for (var i = 1; i <= 2; i++) {
+            let [specialty, _] = await Specialty.findOrCreate({
+                where: {
+                    name: "PEIP",
+                    year: i,
+                },
+            });
+            
+            for (var j = 1; j <= 3; j++) {
+                await Group.findOrCreate({
+                    where: {
+                        num: j,
+                        specialtyId: specialty.id
+                    },
+                });
+            }
+        }
+        const sections = ["IG", "STE", "MEA", "MI", "GBA", "MAT", "MSI", "SE", "EGC"];
+        for(let k in sections) {
+            for(var i = 3; i <= 5; i++) {
+                let [spe, _] = await Specialty.findOrCreate({
+                    where: {
+                        name: sections[k],
+                        year: i
+                    },
+                });
+                
+                for (var j = 1; j <= 2; j++) {
+                    await Group.findOrCreate({
+                        where: {
+                            num: j,
+                            specialtyId: spe.id
+                        },
+                    });
+                }
+            }
+        }
+    };
+
+    createAll().then(() => {
+        console.log("Finished. Exiting.");
+        rl.close();
+    }).catch((err) => {
+        console.error("Unable to populate database. Exiting.");
+        console.error(err);
+        rl.close();
+    });
+
 }
