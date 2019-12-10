@@ -2,7 +2,6 @@ import express from "express";
 import * as models from './models';
 import exphbs from 'express-handlebars';
 import setupMiddlewares from './middlewares';
-import {ensureLoggedIn, ensureLoggedOut} from 'connect-ensure-login';
 import helpers from "./helpers";
 import registerRoutes from "./routes";
 
