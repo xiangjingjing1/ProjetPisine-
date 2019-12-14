@@ -14,7 +14,8 @@ module.exports = function(grunt) {
           options: {
             module: "commonjs",
             lib: [
-                "es2015"
+                "es2015",
+                "dom"
             ],
             target: "es6",
             sourceMap: false,
