@@ -188,6 +188,8 @@ $RECYCLE.BIN/
 
 .tscache
 .sass-cache
+# Temp file from tsc
+*.tmp.txt
 
 # SQLite
 db.sqlite

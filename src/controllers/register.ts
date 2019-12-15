@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import * as models from "../models";
-import Sequelize from "sequelize";
 
 function onUserRegister(req: Request, res: Response) {
     let query = req.body;
@@ -61,19 +60,21 @@ function onUserRegister(req: Request, res: Response) {
                 return;
             }
 
-            // We seach the group the user should be registered in
+            // We search the group the user should be registered in
             models.Group.findOne({
+                where: {
+                    num: q.group,
+                },
                 include: [{
                     model: models.Specialty,
                     as: "specialty",
                     where: {
                         name: q.specialtyName,
                         year: q.specialtyYear,
-                        id: Sequelize.col("group.specialtyId")
-                    }
+                    },
                 }]
             }).then((group) => {
-
+                
                 // We can't find the group, then we can't register the user
                 if (group == null) {
                     res.render("register", { name: "S'inscrire",  errors: ["Cette combinaison de section/année/groupe n'existe pas."] });
@@ -84,14 +85,14 @@ function onUserRegister(req: Request, res: Response) {
 
                     group.addUser(user).then(() => {
                         res.redirect("/login?fromRegister");
-                    }).catch(async (err) => {
+                    }).catch(async (err: any) => {
                         await user.destroy();
                         onPromiseError(err);
                     });
                     
-                }).catch((err) => onPromiseError(err));
-            }).catch((err) => onPromiseError(err));
-        }).catch((err) => onPromiseError(err));
+                }).catch((err: any) => onPromiseError(err));
+            }).catch((err: any) => onPromiseError(err));
+        }).catch((err: any) => onPromiseError(err));
 
     } else {
         res.status(400).send("Missing data");
