@@ -1,6 +1,6 @@
-function times(n: number, block: any) {
+function times(start: number, end: number, block: any) {
     var ret = '';
-    for (var i = 0; i < n; i++) {
+    for (var i = start; i <= end; i++) {
         ret += block.fn(i);
     }
     return ret;
