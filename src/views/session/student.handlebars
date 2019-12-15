@@ -1,0 +1,26 @@
+<a class="btn btn-primary" href="/board" >Retour</a>
+<br/>
+<br/>
+
+<h1>Questionnaire TOEIC</h1>
+<br/>
+
+<h5>Listening Part</h5> 
+<br/>
+
+	{{#times 1 50}}
+		{{>question question=this}}
+	{{/times}}
+
+<br/>
+
+<h5>Reading Part</h5> 
+<br/>
+
+	{{#times 51 100}}
+		{{>question question=this}}
+	{{/times}}
+
+<br/>
+	
+<input class="btn btn-primary" type="submit" value="Envoyer">

@@ -1,21 +1,25 @@
-
-            
-            <form class="Questionnaire" method="post" action="backend.js">
-                Question {{question}}:
-				<div class="form-check form-check-inline">
-  				<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" id="inlineRadio1" value="option1">
-  				<label class="form-check-label" for="inlineRadio1">A</label>
-				</div>
-				<div class="form-check form-check-inline">
-  				<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" id="inlineRadio2" value="option2">
- 				 <label class="form-check-label" for="inlineRadio2">B</label>
-				</div>
-				<div class="form-check form-check-inline">
-  				<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" id="inlineRadio3" value="option3">
-  				<label class="form-check-label" for="inlineRadio3">C</label>
-				</div>
-				<div class="form-check form-check-inline">
-  				<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" id="inlineRadio4" value="option4">
-  				<label class="form-check-label" for="inlineRadio3">D</label>
-				</div><br/>
-            <form/>
+<!-- Design to be changed -->
+<div class="row">
+	<div class="col">
+		Question {{question}}:
+	</div>
+	<div class="col">
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" value="1" id="question{{question}}Answer1">
+			<label class="form-check-label" for="question{{question}}Answer1">A</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" value="2" id="question{{question}}Answer2">
+			<label class="form-check-label" for="question{{question}}Answer2">B</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" value="3" id="question{{question}}Answer3">
+			<label class="form-check-label" for="question{{question}}Answer3">C</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="radio" name="inlineRadioOptions_{{question}}" value="4" id="question{{question}}Answer4">
+			<label class="form-check-label" for="question{{question}}Answer4">D</label>
+		</div>
+		<br/>
+	</div>
+</div>
