@@ -36,6 +36,8 @@ CorrectAnswer.init({
     timestamps: false,
 });
 
-CorrectAnswer.belongsTo(Subject);
+CorrectAnswer.belongsTo(Subject, {
+    onDelete: 'cascade'
+});
 
 export default CorrectAnswer;

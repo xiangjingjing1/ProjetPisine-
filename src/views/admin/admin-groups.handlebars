@@ -12,10 +12,10 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row justify-content-between">
-                        <div class="col-4">
+                        <div class="col-5">
                             {{this.name}}{{this.year}}
                         </div>
-                        <div class="col-4">
+                        <div class="col-7" style="text-align: right">
                             <a  href="#" 
                                 class="text-danger" 
                                 data-action="deleteSpecialty" 
@@ -34,11 +34,20 @@
                         {{#each this.groups}}
                             <li class="list-group-item">
                                 <div class="row justify-content-between">
-                                    <div class="col-4">
+                                    <div class="col-10">
                                         <a href="/groups/{{this.id}}">Groupe {{this.num}}</a>
                                     </div>
                                     <div class="col-2">
-                                        <a href="#" class="text-danger">&times;</a>
+                                        <a  href="#" 
+                                            class="text-danger" 
+                                            data-action="deleteGroup" 
+                                            data-id="{{ this.id }}"
+                                            data-confirm="Groupe {{this.num}}"
+                                            data-target="#confirmModal"
+                                            data-toggle="modal"
+                                        >
+                                            &times;
+                                        </a>
                                     </div>
                                 </div>
                             </li>
@@ -117,7 +126,7 @@
 <script>
 var oldListener = null;
 
-document.querySelectorAll('a[data-action="deleteSpecialty"').forEach((link) => {
+document.querySelectorAll('a[data-action]').forEach((link) => {
     link.addEventListener("click", (e) => {
         e.preventDefault();
         

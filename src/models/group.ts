@@ -39,12 +39,29 @@ UserGroup.init({
     timestamps: false,
 });
 
-Group.belongsTo(Specialty, { as: "specialty" });
+Group.belongsTo(Specialty, { 
+    as: "specialty",
+    onDelete: 'CASCADE',
+    foreignKey: {
+        allowNull: false,
+    }
+});
 Specialty.hasMany(Group, {
     sourceKey: "id",
-    foreignKey: "specialtyId",
+    foreignKey: {
+        name: "specialtyId",
+        allowNull: false,
+    },
     as: "groups",
+    onDelete: 'CASCADE'
 });
-Group.belongsToMany(User, { through: UserGroup });
+Group.belongsToMany(User, { 
+    through: UserGroup,
+    foreignKey: {
+        name: "GroupId",
+        allowNull: false,
+    },
+    onDelete: "CASCADE",
+});
 
 export {Group, UserGroup};
