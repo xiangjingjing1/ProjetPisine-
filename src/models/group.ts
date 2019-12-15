@@ -23,7 +23,28 @@ Group.init({
     timestamps: false,
 });
 
-Group.belongsTo(Specialty, { as: "specialty" });
-Group.belongsToMany(User, { through: "UserGroup" });
+class UserGroup extends sq.Model {}
 
-export default Group;
+UserGroup.init({
+    GroupId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    },
+    UserId: {
+        type: sq.INTEGER,
+        primaryKey: true
+    }
+}, {
+    sequelize,
+    timestamps: false,
+});
+
+Group.belongsTo(Specialty, { as: "specialty" });
+Specialty.hasMany(Group, {
+    sourceKey: "id",
+    foreignKey: "specialtyId",
+    as: "groups",
+});
+Group.belongsToMany(User, { through: UserGroup });
+
+export {Group, UserGroup};

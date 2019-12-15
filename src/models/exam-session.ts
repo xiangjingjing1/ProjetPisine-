@@ -1,7 +1,7 @@
 import sq from "sequelize";
 import sequelize from "./connection";
 import Subject from "./subject";
-import Group from "./group";
+import {Group} from "./group";
 import {BelongsToManyGetAssociationsMixin} from "sequelize";
 
 class ExamSession extends sq.Model {
