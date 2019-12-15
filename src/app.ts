@@ -46,6 +46,7 @@ models.init().then(() => {
         successRedirect: '/',
         failureRedirect: '/login?error'
     }));
+<<<<<<< HEAD
     
     app.get('/logout', (req, res) => {
         req.logout();
@@ -79,6 +80,15 @@ models.init().then(() => {
         });
     });
 
+=======
+    app.get('/login', ensureLoggedOut() ,(req, res) => res.render('login', { name: "Se connecter" }));
+    app.get('/', ensureLoggedIn(), (req, res) => res.render('index', { name: "Tableau de bord" }));
+    app.get('/profil', ensureLoggedIn(), (req, res) => res.render('profil', { name: "Profil", user: req.user }));
+    app.get('/qcm', (req, res) => res.render('qcm', {
+        name: "QCM",
+        questions: [0, 1,2]
+    }));
+>>>>>>> lucas
     /**
      * Start server
      */
