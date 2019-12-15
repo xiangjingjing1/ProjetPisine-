@@ -8,21 +8,46 @@
 {{#if specialties.length}}
     <div class="row row-cols-1 row-cols-md-2">
         {{#each specialties}}
-        <div class="col mb-4 col-sm-6">
+        <div class="col mb-4 col-sm-4">
             <div class="card">
                 <div class="card-header">
-                    {{this.name}}{{this.year}}
+                    <div class="row justify-content-between">
+                        <div class="col-4">
+                            {{this.name}}{{this.year}}
+                        </div>
+                        <div class="col-4">
+                            <a  href="#" 
+                                class="text-danger" 
+                                data-action="deleteSpecialty" 
+                                data-id="{{ this.id }}"
+                                data-confirm="{{this.name}}{{this.year}}"
+                                data-target="#confirmModal"
+                                data-toggle="modal"
+                            >
+                                Supprimer
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 {{#if this.groups.length}}
                     <ul class="list-group list-group-flush">
                         {{#each this.groups}}
                             <li class="list-group-item">
-                                <a href="/groups/{{this.id}}">Groupe {{this.num}}</a>
+                                <div class="row justify-content-between">
+                                    <div class="col-4">
+                                        <a href="/groups/{{this.id}}">Groupe {{this.num}}</a>
+                                    </div>
+                                    <div class="col-2">
+                                        <a href="#" class="text-danger">&times;</a>
+                                    </div>
+                                </div>
                             </li>
                         {{/each}}
                     </ul>
                 {{else}}
-                    Pas de groupe
+                    <div class="card-body">
+                        Pas de groupe
+                    </div>
                 {{/if}}
             </div>
         </div>
@@ -61,3 +86,60 @@
         </div>
     </div>
 </div>
+
+<div class="modal" tabindex="-1" role="dialog" id="confirmModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/admin/groups" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="">
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label for="confirmField" class="col-form-label"></label>
+                        <input type="text" class="form-control" id="confirmField">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <input type="submit" value="Supprimer" class="btn btn-danger">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+var oldListener = null;
+
+document.querySelectorAll('a[data-action="deleteSpecialty"').forEach((link) => {
+    link.addEventListener("click", (e) => {
+        e.preventDefault();
+        
+        document.querySelector('#confirmModal label[for="confirmField"]').innerHTML = 
+        `La suppression de <b>${link.dataset.confirm}</b> entrainera la suppression de tous les comptes associés. ` +
+        `Pour confirmer la suppression veuillez taper ${link.dataset.confirm} dans le champ ci-dessous.<br/><br/>` +
+        `<div class="text-danger">Attention ! Cette action est irréversible.</div>`;
+        
+        document.querySelector('#confirmModal input[name="action"]').value = link.dataset.action;
+        document.querySelector('#confirmModal input[name="id"]').value = link.dataset.id;
+        const field = document.querySelector('#confirmField');
+        field.placeholder = link.dataset.confirm;
+        field.value = "";
+        const delButton = document.querySelector('#confirmModal input[type="submit"]');
+        delButton.disabled = true;
+        if (oldListener != null) {
+            field.removeEventListener("input", oldListener);
+        }
+        oldListener = (e) => {
+            delButton.disabled = e.target.value != link.dataset.confirm;
+        };
+        field.addEventListener("input", oldListener);
+    });
+});
+</script>

@@ -7,6 +7,9 @@ function post(req: Request, res: Response) {
         case "addSpecialty":
             addSpecialty(req, res);
             break;
+        case "deleteSpecialty":
+            deleteSpecialty(req, res);
+            break;
         default:
             get(req, res);
     }
@@ -64,6 +67,39 @@ function addSpecialty(req: Request, res: Response) {
          get(req, res);
     }
 
+}
+
+function deleteSpecialty(req: Request, res: Response) {
+
+    let query = req.body;
+
+    if(query.id != undefined) {
+
+        let id = parseInt(query.id);
+
+        if (id == NaN) {
+            get(req, res, { errors: ["Cette spécialité n'existe pas"] });
+            return;
+        }
+
+        models.Specialty.destroy({
+            where: {
+                id
+            }
+        }).then((count) => {
+            if(count == 0) {
+                get(req, res, { errors: ["Cette spécialité n'existe pas"]});
+            } else {
+                get(req, res, { successes: [`La spécialité a bien été supprimée.`]});
+            }
+        }).catch((err) => {
+            console.error(err);
+            get(req, res, { errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."]});
+        });
+
+    } else {
+        get(req, res);
+    }
 }
 
 function get(req: Request, res: Response, otherData?: object) {
