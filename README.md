@@ -24,7 +24,7 @@ Vous devriez avoir aussi, par le même occasion, npm d'installé. Vous pouvez au
 
 ```
 git clone https://github.com/xiangjingjing1/ProjetPisine-.git
-cd ProjetPiscine-
+cd ProjetPisine-
 ```
 
 Puis installez les dépendances nécessaires au projet :
