@@ -1,0 +1,63 @@
+<h1>Groupes et spécialitées</h1>
+<hr>
+
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#addSpecialtyModal">Ajouter une spécialité</button>
+<br />
+<br />
+
+{{#if specialties.length}}
+    <div class="row row-cols-1 row-cols-md-2">
+        {{#each specialties}}
+        <div class="col mb-4 col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    {{this.name}}{{this.year}}
+                </div>
+                {{#if this.groups.length}}
+                    <ul class="list-group list-group-flush">
+                        {{#each this.groups}}
+                            <li class="list-group-item">
+                                <a href="/groups/{{this.id}}">Groupe {{this.num}}</a>
+                            </li>
+                        {{/each}}
+                    </ul>
+                {{else}}
+                    Pas de groupe
+                {{/if}}
+            </div>
+        </div>
+        {{/each}}
+    </div>
+{{else}}
+    Pas de spécialité
+{{/if}}
+
+<div class="modal" tabindex="-1" role="dialog" id="addSpecialtyModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter une spécialité</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/admin/groups" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="addSpecialty">
+                    <div class="form-group">
+                        <label for="specialtyNameField" class="col-form-label">Nom :</label>
+                        <input type="text" class="form-control" name="specialtyName" id="specialtyNameField" placeholder="Nom de la spécialité (ex: IG)">
+                    </div>
+                    <div class="form-group">
+                        <label for="specialtyYearField" class="col-form-label">Année:</label>
+                        <input class="form-control" name="specialtyYear" id="specialtyYearField" type="number" min="1" max="5" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <input type="submit" value="Ajouter" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,19 +1,39 @@
-<nav class="navbar navbar-dark bg-dark sticky-top">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
     <a class="navbar-brand" href="/">TOEIC</a>
 
-    {{#if user}}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" 
+            aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-    <div class="form-inline">
-      <a class="nav-item nav-link" href="/logout">Se déconnecter</a>
-    </div>
+    <div class="collapse navbar-collapse" id="navbar">
+      <ul class="navbar-nav mr-auto">
 
-    {{else}}
+      {{#if user.isAdmin}}
+      
+        <li class="nav-item">
+          <a class="nav-link" href="#">Groupes et spécialités</a>
+        </li>
 
-    <div class="form-inline">
-      <a class="nav-item nav-link" href="/login">Se connecter</a>
-      <a class="nav-item nav-link" href="/register">S'inscrire</a>
-    </div>
+      {{/if}}
 
-    {{/if}}
+      </ul>
+
+      {{#if user}}
+
+        <div class="form-inline">
+          <a class="nav-item nav-link" href="/logout">Se déconnecter</a>
+        </div>
+
+      {{else}}
+
+        <div class="form-inline">
+          <a class="nav-item nav-link" href="/login">Se connecter</a>
+          <a class="nav-item nav-link" href="/register">S'inscrire</a>
+        </div>
+
+      {{/if}}
     
+    </div>
+
 </nav>
