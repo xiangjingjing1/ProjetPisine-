@@ -5,7 +5,7 @@
   "main": "src/app.ts",
   "scripts": {
     "grunt": "grunt",
-    "test": "cypress open",
+    "test": "grunt test",
     "start": "grunt",
     "admin": "grunt admin && node ./dist/admin.js"
   },
