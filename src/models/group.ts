@@ -1,6 +1,6 @@
 import sq from "sequelize";
 import sequelize from "./connection";
-import Specialty from "./speciality";
+import Specialty from "./specialty";
 import User from "./user";
 import { BelongsToManyAddAssociationMixin } from "sequelize";
 
