@@ -192,4 +192,4 @@ $RECYCLE.BIN/
 *.tmp.txt
 
 # SQLite
-db.sqlite
+*.sqlite

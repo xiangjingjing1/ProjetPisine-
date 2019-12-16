@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 
     const sass = require('dart-sass');
     const webpackConfig = require('./webpack.config');
+    const {exec} = require("child_process");
   
     grunt.initConfig({
       ts: {
@@ -92,7 +93,15 @@ module.exports = function(grunt) {
         dev: {
           options: {
             port: 8000,
-            script: "./dist/app.js"
+            script: "./dist/app.js",
+            node_env: "development",
+          }
+        },
+        test: {
+          options: {
+            port: 8000,
+            script: "./dist/app.js",
+            node_env: "test",
           }
         }
       }
@@ -106,12 +115,16 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-webpack");
     grunt.loadNpmTasks('grunt-express-server');
 
-    grunt.registerTask("default", [
+    grunt.registerTask("compile", [
       "ts",
       "tslint",
       "sass",
       "cssmin",
-      "webpack",
+      "webpack"
+    ]);
+
+    grunt.registerTask("default", [
+      "compile",
       "express:dev",
       "watch"
     ]);
@@ -119,6 +132,17 @@ module.exports = function(grunt) {
     grunt.registerTask("admin", [
       "ts",
       "tslint"
+    ]);
+
+    grunt.registerTask("run-cypress", function() {
+        exec("cypress open");
+    });
+
+    grunt.registerTask("test", [
+      "compile",
+      "express:test",
+      "run-cypress",
+      "watch",
     ]);
   
   };
