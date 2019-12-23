@@ -123,7 +123,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-express-server');
     grunt.loadNpmTasks("grunt-env");
 
-    grunt.registerTask("compile", [
+    grunt.registerTask("build", [
       "ts",
       "tslint",
       "sass",
@@ -133,7 +133,7 @@ module.exports = function(grunt) {
 
     grunt.registerTask("default", [
       "env:dev",
-      "compile",
+      "build",
       "express:dev",
       "watch"
     ]);
@@ -148,7 +148,7 @@ module.exports = function(grunt) {
     });
 
     grunt.registerTask("test", [
-      "compile",
+      "build",
       "express:test",
       "run-cypress",
       "watch",
