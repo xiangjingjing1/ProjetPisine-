@@ -13,10 +13,58 @@ function post(req: Request, res: Response) {
         case "deleteGroup":
             deleteGroup(req, res);
             break;
+        case "addGroup":
+            addGroup(req, res);
+            break;
         default:
             get(req, res);
     }
 
+}
+
+function addGroup(req: Request, res: Response) {
+    let query = req.body;
+    if(query.specialtyId != undefined && query.num != undefined) {
+
+        let specialtyId = parseInt(query.specialtyId);
+        if(isNaN(specialtyId)) {
+            get(req, res, { errors: ["Ce numéro de spécialité n'est pas valide."] });
+            return;
+        }
+
+        let num = parseInt(query.num);
+        if(isNaN(num)) {
+            get(req, res, { errors: ["Le numéro de groupe renseigné n'est pas un nombre."] });
+            return;
+        }
+
+        const onCatch = (err: any) => {
+            console.error(err);
+            get(req, res, { errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."] });
+        };
+
+        models.Group.findOne({
+            where: {
+                specialtyId,
+                num,
+            },
+        }).then((group: models.Group | null) => {
+
+            if(group == null) {
+                models.Group.create({
+                    specialtyId,
+                    num,
+                }).then(() => {
+                    get(req, res, { successes: ["La groupe a bien été créé."]});
+                }).catch(onCatch);
+            } else {
+                get(req, res, { errors: ["Un groupe avec ce numéro existe déjà."] });
+            }
+        
+        }).catch(onCatch);
+    } else {
+        get(req, res);
+    }
 }
 
 function addSpecialty(req: Request, res: Response) {
@@ -32,7 +80,7 @@ function addSpecialty(req: Request, res: Response) {
 
         let year = parseInt(query.specialtyYear);
 
-        if(year == NaN) {
+        if(isNaN(year)) {
             errors.push("L'année doit être un nombre");
         } else if(year <= 0 || year > 5) {
             errors.push("L'année doit être comprise entre 1 et 5 (inclus)");
@@ -80,7 +128,7 @@ function deleteSpecialty(req: Request, res: Response) {
 
         let id = parseInt(query.id);
 
-        if (id == NaN) {
+        if (isNaN(id)) {
             get(req, res, { errors: ["Cette spécialité n'existe pas"] });
             return;
         }
@@ -89,13 +137,13 @@ function deleteSpecialty(req: Request, res: Response) {
             where: {
                 id
             },
-        }).then((count) => {
+        }).then((count: number) => {
             if(count == 0) {
                 get(req, res, { errors: ["Cette spécialité n'existe pas"]});
             } else {
                 get(req, res, { successes: [`La spécialité a bien été supprimée.`]});
             }
-        }).catch((err) => {
+        }).catch((err: any) => {
             console.error(err);
             get(req, res, { errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."]});
         });
@@ -113,7 +161,7 @@ function deleteGroup(req: Request, res: Response) {
 
         let id = parseInt(query.id);
 
-        if(id == NaN) {
+        if(isNaN(id)) {
             get(req, res, { errors: ["Ce groupe n'existe pas"] });
             return;
         }
@@ -122,7 +170,7 @@ function deleteGroup(req: Request, res: Response) {
             where: {
                 id,
             },
-        }).then((count) => {
+        }).then((count: number) => {
             if(count == 0) {
                 get(req, res, { errors: ["Ce groupe n'existe pas"]});
             } else {
@@ -139,6 +187,7 @@ function deleteGroup(req: Request, res: Response) {
 
 }
 
+// TODO: Fix warning : "a promise was created in a handler at internal/timers.js:439:21 but was not returned from it"
 function get(req: Request, res: Response, otherData?: object) {
 
     const onCatch = (err: any) => {
@@ -153,7 +202,7 @@ function get(req: Request, res: Response, otherData?: object) {
     models.Specialty.findAll({
         include: [models.Specialty.associations.groups],
         order: ["name", "year"],
-    }).then((specialties) => {
+    }).then((specialties: models.Specialty[]) => {
         res.render("admin/admin-groups", {
             name: "Groupes et spécialités",
             specialties,

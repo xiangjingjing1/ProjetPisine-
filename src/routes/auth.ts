@@ -1,18 +1,13 @@
 import { Express } from "express";
 import passport from 'passport';
-import onUserRegister from "../controllers/register";
+import register from "../controllers/register";
 import {ensureLoggedOut} from 'connect-ensure-login';
 
 function registerRoutes(app: Express) {
 
     // Register routes
-    app.get('/register', ensureLoggedOut(), (req, res) => {
-        res.render('register', { name: "S'inscrire" });
-    });
-
-    app.post("/register", ensureLoggedOut(), (req, res) => {
-        onUserRegister(req, res);
-    });
+    app.get('/register', ensureLoggedOut(), register.get);
+    app.post("/register", ensureLoggedOut(), register.post);
 
     // Login routes
     app.get('/login', ensureLoggedOut(), (req, res) => {

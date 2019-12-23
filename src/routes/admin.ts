@@ -8,9 +8,9 @@ function registerRoutes(app: Express) {
     app.get("/admin/groups", 
         ensureLoggedIn(), 
         ensureAdmin(), 
-        (req, res) => groups.get(req, res)
+        groups.get
     );
-    app.post("/admin/groups", ensureLoggedIn(), ensureAdmin(), (req, res) => groups.post(req, res));
+    app.post("/admin/groups", ensureLoggedIn(), ensureAdmin(), groups.post);
 
 }
 

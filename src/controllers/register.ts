@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as models from "../models";
 
-function onUserRegister(req: Request, res: Response) {
+function post(req: Request, res: Response) {
     let query = req.body;
     if (
         query.firstname !== undefined &&
@@ -99,6 +99,10 @@ function onUserRegister(req: Request, res: Response) {
     }
 }
 
+function get(req: Request, res: Response) {
+    res.render('register', { name: "S'inscrire" });
+}
+
 interface UserRegisterRequest {
     firstname: string;
     lastname: string;
@@ -110,4 +114,4 @@ interface UserRegisterRequest {
     passwordConfirm: string;
 }
 
-export default onUserRegister;
+export default {post, get};

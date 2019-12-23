@@ -58,6 +58,18 @@
                         Pas de groupe
                     </div>
                 {{/if}}
+                <a href="#" class="card-footer text-muted"
+                            data-id="{{this.id}}"
+                            data-target="#addGroupModal"
+                            data-toggle="modal"
+                >
+                    <div class="row justify-content-between">
+                        <div class="col-10">
+                            Ajouter un groupe
+                        </div>
+                        <div class="col-2">+</div>
+                    </div>
+                </a>
             </div>
         </div>
         {{/each}}
@@ -71,7 +83,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Ajouter une spécialité</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -101,7 +113,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Confirmation de la suppression</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -110,13 +122,40 @@
                     <input type="hidden" name="action" value="">
                     <input type="hidden" name="id" value="">
                     <div class="form-group">
-                        <label for="confirmField" class="col-form-label"></label>
+                        <label for="confirmField" class="col-form-label">Numéro du groupe</label>
                         <input type="text" class="form-control" id="confirmField">
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
                     <input type="submit" value="Supprimer" class="btn btn-danger">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="addGroupModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajouter un groupe</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/admin/groups" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="specialtyId" value="">
+                    <input type="hidden" name="action" value="addGroup">
+                    <div class="form-group">
+                        <label for="numField" class="col-form-label">Numéro du groupe</label>
+                        <input type="number" min="1" name="num" class="form-control" id="numField" value="1">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <input type="submit" value="Ajouter" class="btn btn-primary">
                 </div>
             </form>
         </div>
@@ -149,6 +188,13 @@ document.querySelectorAll('a[data-action]').forEach((link) => {
             delButton.disabled = e.target.value != link.dataset.confirm;
         };
         field.addEventListener("input", oldListener);
+    });
+});
+
+document.querySelectorAll('[data-target="#addGroupModal"]').forEach((link) => {
+    link.addEventListener("click", (e) => {
+        e.preventDefault();
+        document.querySelector('#addGroupModal input[name="specialtyId"]').value = link.dataset.id;
     });
 });
 </script>
