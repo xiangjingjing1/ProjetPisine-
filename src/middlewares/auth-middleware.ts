@@ -3,6 +3,8 @@ import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 import session from 'express-session';
 import {User} from '../models';
+import sequelize from "../models/connection";
+import sqSessionStore from "connect-session-sequelize";
 
 export default function setupAuthMiddleware(app: Express) {
     /**
@@ -54,11 +56,20 @@ export default function setupAuthMiddleware(app: Express) {
      *  });
      *  ```
      */
+
+    const SequelizeStore = sqSessionStore(session.Store);
+    const store = new SequelizeStore({
+        db: sequelize,
+    });
+
     app.use(session({ 
         secret: 'secret_passphrase', // TODO : Load from config file or env variable
         resave: false, // When set to true, it forces session to be saved to the session store, even if the session was never modified during request
         saveUninitialized: false, // When to true, it forces uninitialized sessions (new session but not modified) to be saved to the store
+        store: (store as session.Store),
     }));
+
+    store.sync();
 
     /**
      * Indicate express to use passport middlewares
