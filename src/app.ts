@@ -11,7 +11,7 @@ import wsController from "./controllers/ws";
 const app = express();
 const server = http.createServer(app);
 const io = SocketIO(server);
-const port = 8000;
+const port = process.env.PORT || 80;
 
 models.init().then(() => {
 
