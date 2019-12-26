@@ -18,14 +18,14 @@ export default function setupAuthMiddleware(app: Express) {
             where: {
                 email,
             }
-        }).then((user) => {
-            if(user.checkPassword(password)) {
+        }).then((user: User) => {
+            if(user != null && user.checkPassword(password)) {
                 done(null, user);
             } else {
-                done(null, false, {message: 'Incorrect password !'});
+                done(null, false, {message: 'Incorrect email/password combination !'});
             }
         }).catch((err: any) => {
-            done(err, false, {message: 'Incorrect username'});
+            done(err, false, {message: 'Internal error'});
         });
     }));
     
@@ -37,7 +37,7 @@ export default function setupAuthMiddleware(app: Express) {
     });
     
     passport.deserializeUser((id: number, done) => {
-        User.findByPk(id).then((user) => {
+        User.findByPk(id).then((user: User) => {
             done(null, user);
         }).catch((err: any) => {
             done(err, false);
