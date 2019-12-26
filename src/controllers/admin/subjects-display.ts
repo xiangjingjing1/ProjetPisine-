@@ -3,7 +3,9 @@ import * as models from "../../models";
 
 function get(req: Request, res: Response) {
 
-    models.Subject.findAll().then((subjects: models.Subject[]) => {
+    models.Subject.findAll({
+        order: [["name", "ASC"]],
+    }).then((subjects: models.Subject[]) => {
         res.render("admin/admin-subjects-display", {name: "Sujets d'examen", subjects});
     }).catch((err: any) => {
         console.error(err);

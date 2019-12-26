@@ -3,28 +3,12 @@
 <form method="POST">
     <div class="form-group">
         <label for="subjectNameField">Nom du sujet</label>
-        <input type="text" class="form-control" id="subjectNameField" name="subjectName">
+        <input type="text" class="form-control" id="subjectNameField" name="subjectName" required>
     </div>
 
     <hr>
 
-    <h5>Listening Part</h5> 
-    <br/>
-
-        {{#times 1 2}}
-            {{>question question=this}}
-        {{/times}}
-
-    <br/>
-
-    <h5>Reading Part</h5> 
-    <br/>
-
-        {{#times 3 5}}
-            {{>question question=this}}
-        {{/times}}
-
-    <br/>
+    {{>questions required=true}}
 
     <input type="submit" class="btn btn-primary" value="Créer">
 

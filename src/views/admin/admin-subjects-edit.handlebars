@@ -1,0 +1,115 @@
+<h1>Editer un sujet</h1>
+<hr>
+
+<form method="POST">
+
+    <div class="btn-group">
+        <input type="submit" class="btn btn-primary" value="Enregistrer">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Supprimer</button>
+    </div>
+
+    <br>
+    <br>
+
+    <div class="form-group">
+        <label for="subjectNameField">Nom du sujet</label>
+        <input type="text" class="form-control" id="subjectNameField" name="subjectName" value="{{subject.name}}" required>
+    </div>
+
+    <hr>
+
+    {{>questions answers=subject.answers required=true}}
+
+    <div class="btn-group">
+        <input type="submit" class="btn btn-primary" value="Enregistrer">
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmModal">Supprimer</button>
+    </div>
+
+</form>
+
+<div class="modal" tabindex="-1" role="dialog" id="confirmModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="/admin/subjects/{{subject.id}}/delete" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="">
+                    <input type="hidden" name="id" value="">
+                    <div class="form-group">
+                        <label for="confirmField" class="col-form-label">
+                            Etes vous sûr de vouloir supprimer le sujet <b>{{subject.name}}</b> ?<br>
+                            Pour confirmer la suppression veuillez taper {{subject.name}} dans le champ ci-dessous.<br/><br/>
+                        <div class="text-danger">Attention ! Cette action est irréversible.</div>
+                        </label>
+                        <input type="text" class="form-control" id="confirmField" placeholder="{{subject.name}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <input type="submit" value="Supprimer" class="btn btn-danger" disabled>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Delete confirmation
+    let confirmButton = document.querySelector('#confirmModal input[type="submit"]');
+    document.getElementById("confirmField").addEventListener("input", (e) => {
+        confirmButton.disabled = e.target.value != "{{subject.name}}";
+    });
+
+
+    // Submit button enable/disable
+    let originalValues = {};
+
+    var nameChanged = false;
+    var canSubmitName = true;
+    var answersChanged = false;
+
+    document.querySelectorAll('input[data-type="answer"]').forEach((input) => {
+        if(input.checked) {
+            originalValues[input.dataset.num] = input.value
+        }
+        input.addEventListener("input", (e) => {
+            inspectAnswers();
+            enableDisableButtons();
+        });
+    });
+
+    function inspectAnswers() {
+        answersChanged = Array.from(document.querySelectorAll('input[data-type="answer"]')).some((el) =>
+            el.checked && originalValues[el.dataset.num] != el.value
+        );
+    }
+
+    document.getElementById("subjectNameField").addEventListener("input", (e) => {
+        if(e.target.value != "{{subject.name}}") {
+            nameChanged = true;
+        } else {
+            nameChanged = false;
+        }
+
+        if(e.target.value.length == 0) {
+            canSubmitName = false;
+        } else {
+            canSubmitName = true;
+        }
+
+        enableDisableButtons();
+    });
+
+    function enableDisableButtons() {
+        document.querySelectorAll('input[type="submit"]').forEach((button) => {
+            button.disabled = (!nameChanged && !answersChanged) || !canSubmitName;
+        });
+    }
+
+    enableDisableButtons();
+</script>

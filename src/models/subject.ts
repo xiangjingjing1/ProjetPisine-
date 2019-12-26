@@ -1,10 +1,16 @@
 import sq from "sequelize";
 import sequelize from "./connection";
+import CorrectAnswer from "./correct-answer";
+import {Association} from "sequelize";
 
 class Subject extends sq.Model {
 
     public id!: number;
     public name!: String;
+
+    public static associations: {
+        answers: Association<Subject, CorrectAnswer>
+    };
 
 }
 

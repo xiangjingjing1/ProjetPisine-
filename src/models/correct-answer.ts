@@ -4,10 +4,10 @@ import Subject from "./subject";
 
 class CorrectAnswer extends sq.Model {
 
-    public id!: number;
     public num!: number;
     public answer!: number;
     public subjectId!: number;
+
 }
 
 CorrectAnswer.init({
@@ -18,6 +18,7 @@ CorrectAnswer.init({
             min: 1,
             max: 100,
         },
+        primaryKey: true,
     },
     answer: {
         type: sq.SMALLINT,
@@ -31,13 +32,30 @@ CorrectAnswer.init({
             max: 4,
         }
     },
+    subjectId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    }
 }, {
     sequelize,
     timestamps: false,
 });
 
 CorrectAnswer.belongsTo(Subject, {
-    onDelete: 'cascade'
+    onDelete: 'CASCADE',
+    foreignKey: {
+        name: "subjectId",
+        allowNull: false,
+    }
+});
+Subject.hasMany(CorrectAnswer, {
+    sourceKey: "id",
+    foreignKey: {
+        name: "subjectId",
+        allowNull: false,
+    },
+    as: "answers",
+    onDelete: 'CASCADE'
 });
 
 export default CorrectAnswer;
