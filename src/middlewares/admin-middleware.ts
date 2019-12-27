@@ -8,7 +8,7 @@ const ensureAdmin = () => function(req: Request, res: Response, next: NextFuncti
     if(req.user != null && (req.user as User).isAdmin) {
         next();
     } else {
-        res.redirect("/");
+        res.status(403).redirect("/"); // Forbidden
     }
 };
 
