@@ -68,6 +68,9 @@ export default function setupAuthMiddleware(app: Express) {
         resave: false, // When set to true, it forces session to be saved to the session store, even if the session was never modified during request
         saveUninitialized: false, // When to true, it forces uninitialized sessions (new session but not modified) to be saved to the store
         store: (store as session.Store),
+        cookie: {
+            secure: true,
+        }
     }));
 
     store.sync();
