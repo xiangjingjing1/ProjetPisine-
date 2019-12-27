@@ -1,29 +1,32 @@
 import { Express } from "express";
-import passport from 'passport';
-import register from "../controllers/register";
+import register from "../controllers/auth/register";
+import login from "../controllers/auth/login";
 import {ensureLoggedOut} from 'connect-ensure-login';
 
+/**
+ * Registers all routes relative to authentication.
+ */
 function registerRoutes(app: Express) {
 
-    // Register routes
+    /**
+     * These routes lead to a page allowing basic user to register.
+     *  GET: will display page
+     *  POST: will handle registering request
+     */
     app.get('/register', ensureLoggedOut(), register.get);
     app.post("/register", ensureLoggedOut(), register.post);
 
-    // Login routes
-    app.get('/login', ensureLoggedOut(), (req, res) => {
-        res.render('login', { 
-            name: "Se connecter", 
-            successes: req.query.fromRegister !== undefined ? ["Vous êtes inscrit. Vous pouvez maintenant vous connecter."] : [],
-            errors: req.query.error !== undefined ? ["Mauvaise combinaison email/mot de passe. Ré-essayez."] : [],
-        });
-    });
+    /**
+     * Theses routes lead to a page allowing all users to log in.
+     *  GET: will display page
+     *  POST: will handle login request
+     */
+    app.get('/login', ensureLoggedOut(), login.get);
+    app.post('/login', ensureLoggedOut(), login.post);
 
-    app.post('/login', ensureLoggedOut(), passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login?error'
-    }));
-
-    // Logout route
+    /**
+     * This route will logout the user if this one is connected.
+     */
     app.get('/logout', (req, res) => {
         req.logout();
         res.redirect("/login");

@@ -7,6 +7,7 @@ import sequelize from "../models/connection";
 import sqSessionStore from "connect-session-sequelize";
 
 export default function setupAuthMiddleware(app: Express) {
+    
     /**
      * Set strategy to check user credentials.
      */

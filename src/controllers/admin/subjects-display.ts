@@ -13,8 +13,4 @@ function get(req: Request, res: Response) {
     });
 }
 
-function post(req: Request, res: Response) {
-    res.send("OK !");
-}
-
-export default {get, post};
+export default {get};
