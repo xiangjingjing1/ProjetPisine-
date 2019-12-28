@@ -38,8 +38,7 @@
             </div>
             <form action="/admin/subjects/{{subject.id}}/delete" method="POST">
                 <div class="modal-body">
-                    <input type="hidden" name="action" value="">
-                    <input type="hidden" name="id" value="">
+                    <input type="hidden" name="subjectId" value="{{subject.id}}">
                     <div class="form-group">
                         <label for="confirmField" class="col-form-label">
                             Etes vous sûr de vouloir supprimer le sujet <b>{{subject.name}}</b> ?<br>
