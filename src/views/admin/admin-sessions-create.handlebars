@@ -1,0 +1,98 @@
+<h1 class="title">Créer une session d'examen</h1>
+<hr>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="subjectField">Sujet de l'examen :</label>
+        <select class="form-control" id="subjectField" name="subjectId" required>
+            {{#each subjects}}
+                <option value="{{this.id}}">{{this.name}}</option>
+            {{/each}}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="dateField">Date de l'examen :</label>
+        <input class="form-control" type="date" id="dateField" name="date" aria-describedby="dateHelp" required>
+        <small id="dateHelp" class="form-text text-muted">A titre indicatif</small>
+    </div>
+    <div class="form-group">
+        <label for="timeField">Heure de l'examen :</label>
+        <input class="form-control" type="time" id="timeField" name="time" aria-describedby="timeHelp" required>
+        <small id="timeHelp" class="form-text text-muted">A titre indicatif</small>
+    </div>
+
+    <label>Spécialités :</label>
+    <input type="hidden" value="" name="groups" id="groupsField">
+
+    <div class="row">
+        {{#each specialties}}
+            {{#if this.groups.length}}
+                <ul class="list-unstyled col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
+                        <li>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="Spe{{this.id}}" data-type="spe">
+                                <label class="form-check-label" for="Spe{{this.id}}">
+                                    {{this.name}}{{this.year}}
+                                </label>
+                            </div>
+                        </li>
+                        <ul>
+                            {{#each this.groups}}
+                                <div class="form-check">
+                                    <input  class="form-check-input" 
+                                            type="checkbox" 
+                                            value="{{this.id}}" 
+                                            id="Spe{{../id}}-Grp{{this.id}}"
+                                            data-refers="Spe{{../id}}"
+                                            data-type="grp"
+                                    >
+                                    <label class="form-check-label" for="Spe{{../id}}-Grp{{this.id}}">
+                                        Groupe {{this.num}}
+                                    </label>
+                                </div>
+                            {{/each}}
+                        </ul>
+                </ul>
+            {{/if}}
+        {{/each}}
+    </div>
+
+    <button type="submit" class="btn btn-primary" id="submitButton">Créer la session</button>
+</form>
+
+<script>
+    document.querySelectorAll('input[type="checkbox"][data-type="spe"]').forEach((speCheckBox) => {
+        speCheckBox.addEventListener("input", (e) => {
+            document.querySelectorAll(`input[type="checkbox"][data-type="grp"][data-refers="${e.target.id}"]`).forEach((grpBox) => {
+                grpBox.checked = e.target.checked;
+            });
+        });
+    });
+
+    document.querySelectorAll('input[type="checkbox"][data-type="grp"]').forEach((grpBox) => {
+        grpBox.addEventListener("input", (e) => {
+            let elements = Array.from(document.querySelectorAll(`input[type="checkbox"][data-type="grp"][data-refers="${e.target.dataset.refers}"]`));
+            let totalEl = elements.length;
+            let checkedCount = elements.filter((el) => el.checked).length;
+            let speCheckbox = document.getElementById(e.target.dataset.refers);
+            if(checkedCount == totalEl) {
+                speCheckbox.checked = true;
+                speCheckbox.indeterminate = false;
+            } else if(checkedCount > 0) {
+                speCheckbox.checked = false;
+                speCheckbox.indeterminate = true;
+            } else {
+                speCheckbox.indeterminate = false;
+                speCheckbox.checked = false;
+            }
+        });
+    });
+
+    document.getElementById("submitButton").addEventListener("click", (e) => {
+        let groups = Array.from(document.querySelectorAll('input[type="checkbox"][data-type="grp"]'))
+                            .filter((el) => el.checked)
+                            .map((el) => el.value)
+                            .reduce((prev, next, i) => i == 0 ? next : `${prev},${next}`, "");
+        document.getElementById("groupsField").value = groups;
+    });
+</script>

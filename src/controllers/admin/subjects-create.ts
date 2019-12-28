@@ -10,7 +10,7 @@ function get(req: Request, res: Response, other: object = {}) {
 /**
  * Handles the request which aims to create a subject.
  * 
- * The request body must containt the following properties:
+ * The request body must contain the following properties:
  *  - `subjectName`: a non-empty string corresponding to the subject's name
  *  for `X = 1` to `QUESTIONS_COUNT` (inclusive):
  *      - `questionX`: a integer corresponding to the correct answer for the question X for the subject we want to create

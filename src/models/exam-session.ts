@@ -2,7 +2,8 @@ import sq from "sequelize";
 import sequelize from "./connection";
 import Subject from "./subject";
 import {Group} from "./group";
-import {BelongsToManyGetAssociationsMixin} from "sequelize";
+import ExamResult from "./exam-result";
+import {BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, Association} from "sequelize";
 
 class ExamSession extends sq.Model {
 
@@ -12,6 +13,7 @@ class ExamSession extends sq.Model {
     public subjectId!: number;
 
     public getGroups!: BelongsToManyGetAssociationsMixin<Group>;
+    public addGroup!: BelongsToManyAddAssociationMixin<Group, number>;
 
 }
 
@@ -39,7 +41,36 @@ ExamSession.init({
     timestamps: false,
 });
 
-ExamSession.belongsTo(Subject);
-ExamSession.belongsToMany(Group, {through: 'GroupParticipation'});
+class GroupParticipation extends sq.Model {
 
-export default ExamSession;
+    public ExamSessionId!: number;
+    public GroupId!: number;
+
+}
+
+GroupParticipation.init({
+    ExamSessionId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    },
+    GroupId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    }
+}, {
+    sequelize,
+    timestamps: false,
+});
+
+ExamSession.belongsTo(Subject);
+ExamSession.belongsToMany(Group, {
+    through: GroupParticipation,
+    foreignKey: {
+        name: "ExamSessionId",
+        allowNull: false,
+    },
+    onDelete: "CASCADE"
+});
+ExamResult.belongsTo(ExamSession);
+
+export {ExamSession, GroupParticipation};

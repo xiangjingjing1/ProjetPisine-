@@ -2,6 +2,7 @@
  * Helpers functions that can be used in handlebars template.
  */
 
+ import moment from "moment";
 
  /**
   * This function repeats the given block (end - start + 1) times
@@ -55,4 +56,31 @@ function add(i: number, k: number): number {
     return i + k;
 }
 
-export default {times, eq, add};
+/**
+ * Formats the date to french date format.
+ * 
+ * @param date the date to format
+ */
+function formatDate(date: Date): string {
+    return moment(date).locale("fr-FR").format("dddd DD/MM/YYYY hh:mm");
+}
+
+/**
+ * Format the given date to only return day, month and year
+ * 
+ * @param date the date format
+ */
+function getDate(date: Date): string {
+    return moment(date).format("YYYY-MM-DD");
+}
+
+/**
+ * Format the given date to only return hours and minutes
+ * 
+ * @param date the date to format
+ */
+function getTime(date: Date): string {
+    return moment(date).format("hh:mm");
+}
+
+export default {times, eq, add, formatDate, getDate, getTime};

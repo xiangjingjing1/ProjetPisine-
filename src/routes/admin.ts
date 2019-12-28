@@ -6,6 +6,8 @@ import subjectsDisplay from "../controllers/admin/subjects-display";
 import subjectsCreate from "../controllers/admin/subjects-create";
 import subjectsEdit from "../controllers/admin/subjects-edit";
 import subjectsDelete from "../controllers/admin/subjects-delete";
+import sessionsDisplay from "../controllers/admin/sessions-display";
+import sessionsCreate from "../controllers/admin/sessions-create";
 
 /**
  * Registers all routes relative to administration.
@@ -48,6 +50,17 @@ function registerRoutes(app: Express) {
      */
     router.post("/subjects/:subjectId/delete", subjectsDelete.post);
 
+    /**
+     * This route leads to page displaying all exam sessions.
+     */
+    router.get("/sessions", sessionsDisplay.get);
+
+    /**
+     * These routes allows administrator to create an exam session.
+     */
+    router.get("/sessions/create", sessionsCreate.get);
+    router.post("/sessions/create", sessionsCreate.post);
+    
     app.use("/admin", router);
 }
 

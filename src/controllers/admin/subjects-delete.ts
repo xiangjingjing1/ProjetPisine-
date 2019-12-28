@@ -28,6 +28,14 @@ function post(req: Request, res: Response) {
     }
 
     /**
+     * Checks if the id provided in URL and in request body are the same
+     */
+    if(req.params.subjectId != req.body.subjectId) {
+        res.sendStatus(400); // Bad request
+        return;
+    }
+
+    /**
      * We search for a subject with the given id
      */
     Subject.findByPk(subjectId).then((subject: Subject | null) => {
