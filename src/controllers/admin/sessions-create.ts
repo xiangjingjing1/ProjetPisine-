@@ -15,24 +15,21 @@ function get(req: Request, res: Response, otherData: object = {}) {
         });
     };
 
-    Subject.findAll({
-        order: [["name", "ASC"]]
-    }).then((subjects: Subject[]) => {
-
+    Promise.all([
+        Subject.findAll({
+            order: [["name", "ASC"]]
+        }),
         Specialty.findAll({
             include: [Specialty.associations.groups],
             order: [["name", "ASC"], ["year", "ASC"]]
-        }).then((specialties: Specialty[]) => {
-
-            res.render("admin/admin-sessions-create", {
-                name: "Créer une session d'examen",
-                subjects,
-                specialties,
-                ...otherData
-            });
-            
-        }).catch(onCatch);
-            
+        })
+    ]).then(([subjects, specialties]: [Subject[], Specialty[]]) => {
+        res.render("admin/admin-sessions-create", {
+            name: "Créer une session d'examen",
+            subjects,
+            specialties,
+            ...otherData
+        });
     }).catch(onCatch);
 
 }
@@ -51,56 +48,15 @@ function post(req: Request, res: Response) {
     let query = req.body;
 
     /**
-     * We check the request body has the required properties
+     * We check the request body is ok
      */
-    if(query.subjectId == undefined || query.date == undefined || query.time == undefined || query.groups == undefined) {
-        res.sendStatus(500); // Bad request
+    let data = checkSentData(query);
+    if(typeof data == "string") {
+        res.status(500).send(data); // Bad request
         return;
     }
 
-    /**
-     * We check if the given subject id is an integer
-     */
-    let subjectId = parseInt(query.subjectId);
-    if(isNaN(subjectId)) {
-        res.status(500).send("Invalid subject id"); // Bad request
-        return;
-    }
-
-    /**
-     * We check if the given date has the correct format
-     */
-    if(!DATE_FORMAT.test(query.date)) {
-        res.status(500).send("Invalid date format"); // Bad request
-        return;
-    }
-
-    /**
-     * We check if the given time has the correct format
-     */
-    if(!TIME_FORMAT.test(query.time)) {
-        res.status(500).send("Invalid time format"); // Bad request
-        return;
-    }
-
-    /**
-     * We check the given date is correct
-     */
-    let date = new Date(`${query.date} ${query.time}`);
-    if(isNaN(date.getTime())) {
-        res.status(500).send("Invalid date");
-        return;
-    }
-
-    /**
-     * We check if the given `groups` string is a comma separated list of integers
-     */
-
-    let groupIds = (query.groups as string).split(',').map((v) => parseInt(v));
-    if(groupIds.find(isNaN) != undefined) {
-        res.status(500).send("Invalid groups");
-        return;
-    }
+    let {subjectId, date, groupsIds} = data;
 
     /**
      * We define a callback that will be used on internal errors
@@ -118,50 +74,113 @@ function post(req: Request, res: Response) {
          */
         if(subject == null) {
             get(req, res, {errors: ["Ce sujet n'existe pas"]});
-            return;
+            return null;
         }
 
+        
         /**
-         * We search the groups that have to participate to the session
+         * We search the groups that have to participate to the session.
+         * We create the exam session and setting its state to the default WAITING state.
          */
-        Group.findAll({
-            where: {
-                id: {
-                    [sq.Op.in]: groupIds
+        Promise.all([
+            Group.findAll({
+                where: {
+                    id: {
+                        [sq.Op.in]: groupsIds
+                    }
                 }
-            }
-        }).then((groups: Group[]) => {
-            
-            /**
-             * We create the exam session and setting its state to the default WAITING state
-             */
+            }),
             ExamSession.create({
                 date,
-                state: 0, // WAITING
+                state: ExamSession.WAITING,
                 SubjectId: subjectId,
-            }).then((exam: ExamSession) => {
+            })
+        ]).then(([groups, exam]: [Group[], ExamSession]) => {
 
-                /**
-                 * Mapping groups to their corresponding partipation object to
-                 * create all rows in a single query
-                 */
-                let participations = groups.map((group) => ({
-                    GroupId: group.id,
-                    ExamSessionId: exam.id,
-                }));
+            /**
+             * Mapping groups to their corresponding partipation object to
+             * create all rows in a single query
+             */
+            let participations = groups.map((group) => ({
+                GroupId: group.id,
+                ExamSessionId: exam.id,
+            }));
 
-                GroupParticipation.bulkCreate(participations).then(() => {
+            return Promise.all([Promise.resolve(exam.id), GroupParticipation.bulkCreate(participations)]);
 
-                    res.redirect("/admin/sessions");
+        }).then(([id, _]) => {
 
-                }).catch(onCatch);
-
-            }).catch(onCatch);
+            res.redirect(`/admin/sessions/${id}/manage`);
 
         }).catch(onCatch);
+
+        return null;
 
     }).catch(onCatch);
 
 }
 
+/**
+ * Checks if the data in the request body matches expectations
+ * 
+ * @returns the formatted data if everything's correct, else a string containing the error message
+ */
+function checkSentData(query: any): { subjectId: number, date: Date, groupsIds: number[] } | string {
+    /**
+     * We check the request body has the required properties
+     */
+    if(query.subjectId == undefined || query.date == undefined || query.time == undefined || query.groups == undefined) {
+        return "Missing property";
+    }
+
+    /**
+     * We check if the given subject id is an integer
+     */
+    let subjectId = parseInt(query.subjectId);
+    if(isNaN(subjectId)) {
+        return "Invalid subject id";
+    }
+
+    /**
+     * We check if the given date has the correct format
+     */
+    if(!DATE_FORMAT.test(query.date)) {
+        return "Invalid date format";
+    }
+
+    /**
+     * We check if the given time has the correct format
+     */
+    if(!TIME_FORMAT.test(query.time)) {
+        return "Invalid time format";
+    }
+
+    /**
+     * We check the given date is correct
+     */
+    let date = new Date(`${query.date} ${query.time}`);
+    if(isNaN(date.getTime())) {
+        return "Invalid date";
+    }
+
+    /**
+     * We check if the given `groups` string is a comma separated list of integers
+     */
+
+    var groupsIds: number[] = [];
+    if(query.groups.length > 0) {
+        groupsIds = (query.groups as string).split(',').map((v) => parseInt(v));
+        if(groupsIds.find(isNaN) != undefined) {
+            return "Invalid groups";
+        }
+    }
+
+    return {
+        subjectId,
+        date,
+        groupsIds
+    };
+}
+
 export default {get, post};
+export {checkSentData};

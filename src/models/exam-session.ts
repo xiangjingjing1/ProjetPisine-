@@ -3,9 +3,13 @@ import sequelize from "./connection";
 import Subject from "./subject";
 import {Group} from "./group";
 import ExamResult from "./exam-result";
-import {BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin, Association} from "sequelize";
+import {BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin} from "sequelize";
 
 class ExamSession extends sq.Model {
+
+    public static WAITING = 0;
+    public static IN_PROGRESS = 1;
+    public static FINISHED = 2;
 
     public id!: number;
     public date!: Date;
