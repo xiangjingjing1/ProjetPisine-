@@ -1,10 +1,15 @@
 import sq from "sequelize";
 import sequelize from "./connection";
 import Subject from "./subject";
-import Group from "./group";
-import {BelongsToManyGetAssociationsMixin} from "sequelize";
+import {Group} from "./group";
+import ExamResult from "./exam-result";
+import {BelongsToManyGetAssociationsMixin, BelongsToManyAddAssociationMixin} from "sequelize";
 
 class ExamSession extends sq.Model {
+
+    public static WAITING = 0;
+    public static IN_PROGRESS = 1;
+    public static FINISHED = -1;
 
     public id!: number;
     public date!: Date;
@@ -12,6 +17,7 @@ class ExamSession extends sq.Model {
     public subjectId!: number;
 
     public getGroups!: BelongsToManyGetAssociationsMixin<Group>;
+    public addGroup!: BelongsToManyAddAssociationMixin<Group, number>;
 
 }
 
@@ -24,14 +30,14 @@ ExamSession.init({
         /**
          * WAITING: 0
          * IN_PROGRESS: 1
-         * FINISHED: 2
+         * FINISHED: -1
          */
         type: sq.INTEGER,
         allowNull: false,
         defaultValue: 0,
         validate: {
-            min: 0,
-            max: 2,
+            min: -1,
+            max: 1,
         },
     },
 }, {
@@ -39,7 +45,36 @@ ExamSession.init({
     timestamps: false,
 });
 
-ExamSession.belongsTo(Subject);
-ExamSession.belongsToMany(Group, {through: 'GroupParticipation'});
+class GroupParticipation extends sq.Model {
 
-export default ExamSession;
+    public ExamSessionId!: number;
+    public GroupId!: number;
+
+}
+
+GroupParticipation.init({
+    ExamSessionId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    },
+    GroupId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    }
+}, {
+    sequelize,
+    timestamps: false,
+});
+
+ExamSession.belongsTo(Subject);
+ExamSession.belongsToMany(Group, {
+    through: GroupParticipation,
+    foreignKey: {
+        name: "ExamSessionId",
+        allowNull: false,
+    },
+    onDelete: "CASCADE"
+});
+ExamResult.belongsTo(ExamSession);
+
+export {ExamSession, GroupParticipation};

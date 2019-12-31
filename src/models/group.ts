@@ -1,6 +1,6 @@
 import sq from "sequelize";
 import sequelize from "./connection";
-import Specialty from "./speciality";
+import Specialty from "./specialty";
 import User from "./user";
 import { BelongsToManyAddAssociationMixin } from "sequelize";
 
@@ -23,7 +23,45 @@ Group.init({
     timestamps: false,
 });
 
-Group.belongsTo(Specialty, { as: "specialty" });
-Group.belongsToMany(User, { through: "UserGroup" });
+class UserGroup extends sq.Model {}
 
-export default Group;
+UserGroup.init({
+    GroupId: {
+        type: sq.INTEGER,
+        primaryKey: true,
+    },
+    UserId: {
+        type: sq.INTEGER,
+        primaryKey: true
+    }
+}, {
+    sequelize,
+    timestamps: false,
+});
+
+Group.belongsTo(Specialty, { 
+    as: "specialty",
+    onDelete: 'CASCADE',
+    foreignKey: {
+        allowNull: false,
+    }
+});
+Specialty.hasMany(Group, {
+    sourceKey: "id",
+    foreignKey: {
+        name: "specialtyId",
+        allowNull: false,
+    },
+    as: "groups",
+    onDelete: 'CASCADE'
+});
+Group.belongsToMany(User, { 
+    through: UserGroup,
+    foreignKey: {
+        name: "GroupId",
+        allowNull: false,
+    },
+    onDelete: "CASCADE",
+});
+
+export {Group, UserGroup};

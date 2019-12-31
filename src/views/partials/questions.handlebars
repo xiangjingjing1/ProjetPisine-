@@ -1,0 +1,67 @@
+<!-- Design to be changed -->
+
+<h5>Listening Part</h5> 
+
+<br/>
+	{{#times 0 1}}
+		{{>question num=(add this 1) required=../required count=4 value=(lookup ../answers this)}}
+	{{/times}}
+
+<br/>
+
+<h5>Reading Part</h5> 
+<br/>
+
+	{{#times 2 4}}
+		{{>question num=(add this 1) required=../required count=4 value=(lookup ../answers this)}}
+	{{/times}}
+
+<br/>
+
+{{#*inline "question"}}
+	<div class="row">
+		<div class="col">
+			Question {{num}}:
+		</div>
+		<div class="col">
+
+			{{#times 1 count}}
+					<div class="form-check form-check-inline">
+					<input  class="form-check-input" 
+							data-type="answer" 
+							data-num="{{../num}}"
+							type="radio" 
+							name="question{{../num}}" 
+							value="{{this}}" 
+							id="question{{../num}}Answer{{this}}"
+					
+						{{#if ../required}}
+							required
+						{{/if}}
+
+						{{#if (eq ../value.answer this)}}
+							checked
+						{{/if}}
+					
+					>
+					<label class="form-check-label" for="question{{num}}Answer1">
+						{{#if (eq this 1)}}
+							A
+						{{/if}}
+						{{#if (eq this 2)}}
+							B
+						{{/if}}
+						{{#if (eq this 3)}}
+							C
+						{{/if}}
+						{{#if (eq this 4)}}
+							D
+						{{/if}}
+					</label>
+				</div>
+			{{/times}}
+
+			<br/>
+		</div>
+	</div>
+{{/inline}}

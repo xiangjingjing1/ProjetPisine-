@@ -1,0 +1,15 @@
+<h1 class="title">Créer un sujet d'examen</h1>
+
+<form method="POST">
+    <div class="form-group">
+        <label for="subjectNameField">Nom du sujet</label>
+        <input type="text" class="form-control" id="subjectNameField" name="subjectName" required>
+    </div>
+
+    <hr>
+
+    {{>questions required=true}}
+
+    <input type="submit" class="btn btn-primary" value="Créer">
+
+</form>

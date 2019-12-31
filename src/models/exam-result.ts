@@ -1,7 +1,6 @@
 import sq from "sequelize";
 import sequelize from "./connection";
 import User from "./user";
-import ExamSession from "./exam-session";
 
 class ExamResult extends sq.Model {
 
@@ -33,6 +32,5 @@ ExamResult.init({
 });
 
 ExamResult.belongsTo(User);
-ExamResult.belongsTo(ExamSession);
 
 export default ExamResult;

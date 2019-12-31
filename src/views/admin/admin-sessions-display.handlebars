@@ -1,0 +1,48 @@
+<h1 class="title">Sessions d'examen</h1>
+<hr>
+
+<a class="btn btn-success" href="/admin/sessions/create">Créer une session</a>
+<br>
+<br>
+
+{{#if sessions.length}}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Sujet</th>
+                <th scope="col">Date</th>
+                <th scope="col">Etat</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each sessions}}
+                <tr>
+                    <td>{{this.Subject.name}}</td>
+                    <td>{{formatDate this.date}}</td>
+                    <td>
+                        {{#if (eq this.state 0)}}
+                            <span class="badge badge-warning">En attente</span>
+                        {{/if}}
+
+                        {{#if (eq this.state 1)}}
+                            <span class="badge badge-success">En cours</span>
+                        {{/if}}
+
+                        {{#if (eq this.state -1)}}
+                            <span class="badge badge-danger">Terminé</span>
+                        {{/if}}
+                        
+                    </td>
+                    <td><a href="/admin/sessions/{{this.id}}/manage">Gérer</a></td>
+                </tr>
+                <!--  -->
+            {{/each}}
+        </tbody>
+    </table>
+{{else}}
+
+    <h3 class="text-center">Pas de session d'examen</h3>
+
+{{/if}}

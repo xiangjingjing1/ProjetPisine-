@@ -1,0 +1,26 @@
+import {Express, Router} from "express";
+import groups from "../controllers/api/groups";
+import specialties from "../controllers/api/specialties";
+
+/**
+ * Registers all routes relative to REST API.
+ */
+function registerRoutes(app: Express) {
+
+    var router = Router();
+    
+    /**
+     * This route is used to retrieve all known groups.
+     */
+    router.get('/groups', groups.get);
+
+
+    /**
+     * This route is used to retrieve all known specialties.
+     */
+    router.get("/specialties", specialties.get);
+
+    app.use("/api", router);
+}
+
+export default registerRoutes;

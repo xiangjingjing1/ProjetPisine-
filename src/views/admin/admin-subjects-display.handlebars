@@ -1,0 +1,20 @@
+<h1 class="title">Sujets d'examen</h1>
+<hr>
+
+<a class="btn btn-success" href="/admin/subjects/create">Créer un sujet</a>
+<br>
+<br>
+
+{{#if subjects.length}}
+    <div class="list-group list-group-flush">
+        {{#each subjects}}
+            <a href="/admin/subjects/{{this.id}}/edit" class="list-group-item list-group-item-action">
+                {{this.name}}
+            </a>
+        {{/each}}
+    </div>
+{{else}}
+
+    <h3 class="text-center">Pas de sujets d'examen</h3>
+
+{{/if}}
