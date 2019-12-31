@@ -1,0 +1,20 @@
+<a class="btn btn-primary" href="/student/sessions" >Retour</a>
+<br/>
+<br/>
+
+<h1>Questionnaire TOEIC</h1>
+<br/>
+
+{{>questions}}
+	
+<input class="btn btn-primary" type="submit" value="Envoyer">
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io("/student");
+    socket.on('connect', () => {
+
+        socket.emit("join-session", "{{session.id}}");
+
+    });
+</script>

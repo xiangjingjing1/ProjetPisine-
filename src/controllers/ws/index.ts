@@ -2,13 +2,14 @@ import SocketIO from "socket.io";
 import {User, ExamSession} from "../../models";
 
 var userToSocket: {[userId: number]: SocketIO.Socket} = {};
+var sessionsToUsersIds: {[sessionId: number]: number[]} = {};
 
 function init(io: SocketIO.Server) {
 
-    /**
-     * Disconnect unused sockets 
-     */
-    io.on('connection', (socket) => {
+    const adminNS = io.of("/admin");
+    const studentNS = io.of("/student");
+
+    adminNS.on('connection', (socket) => {
 
         /**
          * Map user id to it's socket
@@ -17,11 +18,16 @@ function init(io: SocketIO.Server) {
         if(userToSocket[user.id]) {
             userToSocket[user.id].disconnect();
         }
-        userToSocket[user.id] = socket;
+
+        if(user.isAdmin) {
+            userToSocket[user.id] = socket;
+        } else {
+            delete userToSocket[user.id];
+            return;
+        }
 
         /**
-         * Event sent when a student user joins an exam session or when 
-         * an admin user joins the exam session management page
+         * Event sent when an admin user joins the exam session management page
          */
         socket.on('join-session', (data: any) => {
 
@@ -37,27 +43,13 @@ function init(io: SocketIO.Server) {
                     return null;
                 }
 
-                if(user.isAdmin) {
+                /**
+                 * The user is an admin, we make him join admin room
+                 */
 
-                    /**
-                     * The user is an admin, we make him join admin room
-                     */
-                    socket.join(`session-admin-${session.id}`);
-                    
-                    let count = Object.keys(io.to(`session-${session.id}`).sockets).length;
-                    socket.send("connected-count", count);
+                let count = (sessionsToUsersIds[session.id] || []).length;
 
-                } else {
-
-                    /**
-                     * The user isn't an admin, we make him join the student room
-                     */
-                    socket.join(`session-${session.id}`);
-
-                    let count = Object.keys(io.to(`session-${session.id}`).sockets).length;
-                    io.to(`session-admin-${session.id}`).emit("conencted-count", count);
-
-                }
+                socket.emit("connected-count", count);
 
             }).catch((err: any) => {
                 console.error(err);
@@ -68,7 +60,71 @@ function init(io: SocketIO.Server) {
 
     });
 
+    studentNS.on('connection', (socket) => {
 
+        /**
+         * Map user id to it's socket
+         */
+        let user = (socket.request.user as User);
+        if(userToSocket[user.id]) {
+            userToSocket[user.id].disconnect();
+        }
+
+        if(!user.isAdmin) {
+            userToSocket[user.id] = socket;
+        } else {
+            delete userToSocket[user.id];
+            return;
+        }
+
+        /**
+         * Event sent when an student user joins the exam session page
+         */
+        socket.on('join-session', (data: any) => {
+
+            let sessionId = parseInt(data);
+            if(isNaN(sessionId)) {
+                socket.emit("wrong-session");
+            }
+
+            ExamSession.findByPk(sessionId).then((session: ExamSession | null) => {
+
+                if(session == null) {
+                    socket.emit("wrong-session");
+                    return null;
+                }
+
+                var usersList = sessionsToUsersIds[session.id];
+                if(!usersList) {
+                    usersList = [];
+                    sessionsToUsersIds[session.id] = usersList;
+                }
+
+                if(!usersList.includes(user.id)) {
+                    usersList.push(user.id);
+                }
+
+                /**
+                 * The user is an admin, we make him join admin room
+                 */
+
+                let count = usersList.length;
+
+                adminNS.emit("connected-count", count);
+
+                socket.on("disconnect", () => {
+                    sessionsToUsersIds[sessionId] = sessionsToUsersIds[sessionId].filter((id) => id != user.id);
+                    adminNS.emit("connected-count", sessionsToUsersIds[sessionId].length);
+                });
+
+            }).catch((err: any) => {
+                console.error(err);
+                socket.emit("server-error");
+            });
+
+        });
+
+    });
 
 }
 

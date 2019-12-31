@@ -73,7 +73,7 @@ export default function setupAuthMiddleware(app: Express, io: SocketIO.Server) {
         saveUninitialized: false, // When to true, it forces uninitialized sessions (new session but not modified) to be saved to the store
         store: (store as session.Store),
         cookie: {
-            secure: true,
+            secure: process.env.NODE_ENV == "production",
         }
     }));
 
