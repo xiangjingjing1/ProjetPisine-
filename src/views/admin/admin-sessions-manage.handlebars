@@ -4,6 +4,8 @@
 <h3>Gestion :</h3>
 <br>
 
+    Nombre d'étudiants connectés : <strong id="connectedCount">0</strong>
+
     {{#if (eq session.state 0)}}
         <form method="POST">
             <input type="hidden" name="action" value="start">
@@ -52,3 +54,15 @@
 </form>
 
 <script type="text/javascript" src="/static/js/groupsCheckboxs.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io();
+    socket.on('connect', () => {
+
+        socket.on("connected-count", (data) => {
+            document.getElementById("connectedCount").innerText = data;
+        });
+
+        socket.emit("join-session", "{{session.id}}");
+    });
+</script>

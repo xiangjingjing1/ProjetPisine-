@@ -5,8 +5,10 @@ import session from 'express-session';
 import {User} from '../models';
 import sequelize from "../models/connection";
 import sqSessionStore from "connect-session-sequelize";
+import SocketIO from "socket.io";
+import passportSocketIO from "passport.socketio";
 
-export default function setupAuthMiddleware(app: Express) {
+export default function setupAuthMiddleware(app: Express, io: SocketIO.Server) {
     
     /**
      * Set strategy to check user credentials.
@@ -63,8 +65,10 @@ export default function setupAuthMiddleware(app: Express) {
         db: sequelize,
     });
 
-    app.use(session({ 
-        secret: 'secret_passphrase', // TODO : Load from config file or env variable
+    const secret = 'secret_passphrase'; // TODO : Load from config file or env variable
+
+    app.use(session({
+        secret,
         resave: false, // When set to true, it forces session to be saved to the session store, even if the session was never modified during request
         saveUninitialized: false, // When to true, it forces uninitialized sessions (new session but not modified) to be saved to the store
         store: (store as session.Store),
@@ -72,6 +76,17 @@ export default function setupAuthMiddleware(app: Express) {
             secure: true,
         }
     }));
+
+    io.use(passportSocketIO.authorize({
+        key: 'connect.sid',
+        secret,
+        store,
+        success: onSocketIOSuccess,
+    }));
+
+    function onSocketIOSuccess(data: any, accept: (err?: any, accepted?: boolean) => any) {
+        accept();
+    }
 
     store.sync();
 

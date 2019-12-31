@@ -4,8 +4,13 @@ import exphbs from 'express-handlebars';
 import setupMiddlewares from './middlewares';
 import helpers from "./helpers";
 import registerRoutes from "./routes";
+import SocketIO from "socket.io";
+import http from "http";
+import wsController from "./controllers/ws";
 
 const app = express();
+const server = http.createServer(app);
+const io = SocketIO(server);
 const port = 8000;
 
 models.init().then(() => {
@@ -26,7 +31,7 @@ models.init().then(() => {
      * It defines middlewares that retrieves authed user, parses form body, serves static files.
      */
 
-    setupMiddlewares(app);
+    setupMiddlewares(app, io);
 
     /**
      * Define routes.
@@ -36,8 +41,15 @@ models.init().then(() => {
     registerRoutes(app);
 
     /**
+     * Define controllers for websocket
+     */
+    wsController.init(io);
+
+    /**
      * Start server
      */
 
-    app.listen(port, () => console.log(`Server listening on port ${port}`));
+    server.listen(port, () => console.log(`Server listening on port ${port}`));
 });
+
+export {app, server, io};

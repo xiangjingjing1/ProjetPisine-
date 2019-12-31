@@ -22,7 +22,7 @@ function registerRoutes(app: Express) {
      *  POST: will handle login request
      */
     app.get('/login', ensureLoggedOut(), login.get);
-    app.post('/login', ensureLoggedOut(), login.post);
+    app.post('/login', login.post);
 
     /**
      * This route will logout the user if this one is connected.

@@ -9,11 +9,9 @@ function get(req: Request, res: Response) {
     });
 }
 
-function post(req: Request, res: Response) {
-    passport.authenticate('local', {
+const post = passport.authenticate('local', {
         successRedirect: '/',
         failureRedirect: '/login?error'
-    })(req, res);
-}
+    });
 
 export default {get, post};
