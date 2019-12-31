@@ -1,6 +1,12 @@
 <div class="form-group">
         <label for="subjectField">Sujet de l'examen :</label>
-        <select class="form-control" id="subjectField" name="subjectId" required>
+        <select class="form-control" id="subjectField" name="subjectId" required
+        
+            {{#if disabled}}
+                disabled
+            {{/if}}
+
+        >
             {{#each subjects}}
                 <option value="{{this.id}}"
                     {{#if (eq ../session.SubjectId this.id)}}
@@ -19,6 +25,11 @@
             {{#if session.date}}
                 value="{{getDate session.date}}"
             {{/if}}
+
+            {{#if disabled}}
+                disabled
+            {{/if}}
+        
         >
         <small id="dateHelp" class="form-text text-muted">A titre indicatif</small>
     </div>
@@ -28,6 +39,10 @@
             
             {{#if session.date}}
                 value="{{getTime session.date}}"
+            {{/if}}
+
+            {{#if disabled}}
+                disabled
             {{/if}}
 
         >
@@ -43,7 +58,13 @@
                 <ul class="list-unstyled col-12 col-sm-6 col-md-4 col-lg-3 col-xl-2">
                         <li>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="Spe{{this.id}}" data-type="spe">
+                                <input class="form-check-input" type="checkbox" id="Spe{{this.id}}" data-type="spe"
+                                
+                                    {{#if ../disabled}}
+                                        disabled
+                                    {{/if}}
+
+                                >
                                 <label class="form-check-label" for="Spe{{this.id}}">
                                     {{this.name}}{{this.year}}
                                 </label>
@@ -58,11 +79,16 @@
                                             id="Spe{{../id}}-Grp{{this.id}}"
                                             data-refers="Spe{{../id}}"
                                             data-type="grp"
+
                                             {{#each @root.session.Groups}}
                                                 {{#if (eq this.id ../id)}}
                                                     checked
                                                 {{/if}}
                                             {{/each}}
+
+                                            {{#if ../../disabled}}
+                                                disabled
+                                            {{/if}}
                                     >
                                     <label class="form-check-label" for="Spe{{../id}}-Grp{{this.id}}">
                                         Groupe {{this.num}}

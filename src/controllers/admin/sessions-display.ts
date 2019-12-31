@@ -5,7 +5,7 @@ function get(req: Request, res: Response) {
 
     ExamSession.findAll({
         include: [Subject],
-        order: [["state", "ASC"], [Subject, "name", "ASC"]],
+        order: [["state", "DESC"], ["date", "ASC"], [Subject, "name", "ASC"]],
     }).then((sessions: ExamSession[]) => {
 
         res.render("admin/admin-sessions-display", {

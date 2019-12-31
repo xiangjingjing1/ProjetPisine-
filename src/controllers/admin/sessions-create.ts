@@ -52,7 +52,7 @@ function post(req: Request, res: Response) {
      */
     let data = checkSentData(query);
     if(typeof data == "string") {
-        res.status(500).send(data); // Bad request
+        res.status(400).send(data); // Bad request
         return;
     }
 

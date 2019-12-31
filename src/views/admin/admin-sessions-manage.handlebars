@@ -1,13 +1,54 @@
 <h1 class="title">Gérer une session d'examen</h1>
 <hr>
 
+<h3>Gestion :</h3>
+<br>
+
+    {{#if (eq session.state 0)}}
+        <form method="POST">
+            <input type="hidden" name="action" value="start">
+            <button class="btn btn-block btn-success">Lancer la session</button>
+        </form>
+
+        <br>
+    {{/if}}
+
+    {{#if (eq session.state 1)}}
+        <form method="POST">
+            <input type="hidden" name="action" value="stop">
+            <button class="btn btn-block btn-warning">Terminer la session</button>
+        </form>
+
+        <br>
+    {{/if}}
+    
+    <form method="POST">
+        <input type="hidden" name="action" value="delete">
+        <button class="btn btn-block btn-danger"
+        
+            {{#if (eq session.state 1)}}
+                disabled
+            {{/if}}
+
+        >Supprimer la session</button>
+    </form>
+
+<br>
+<h3>Configuration :</h3>
+
 <form method="POST">
 
     <input type="hidden" name="action" value="update">
     
-    {{>sessionProperties}}
+    {{>sessionProperties disabled=(neq session.state 0)}}
 
-    <button type="submit" class="btn btn-primary" id="submitButton">Sauvegarder la session</button>
+    <button type="submit" class="btn btn-primary" id="submitButton"
+    
+        {{#if (neq session.state 0)}}
+            disabled
+        {{/if}}
+
+    >Sauvegarder la session</button>
 </form>
 
 <script type="text/javascript" src="/static/js/groupsCheckboxs.js"></script>

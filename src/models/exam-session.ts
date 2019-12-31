@@ -9,7 +9,7 @@ class ExamSession extends sq.Model {
 
     public static WAITING = 0;
     public static IN_PROGRESS = 1;
-    public static FINISHED = 2;
+    public static FINISHED = -1;
 
     public id!: number;
     public date!: Date;
@@ -30,14 +30,14 @@ ExamSession.init({
         /**
          * WAITING: 0
          * IN_PROGRESS: 1
-         * FINISHED: 2
+         * FINISHED: -1
          */
         type: sq.INTEGER,
         allowNull: false,
         defaultValue: 0,
         validate: {
-            min: 0,
-            max: 2,
+            min: -1,
+            max: 1,
         },
     },
 }, {

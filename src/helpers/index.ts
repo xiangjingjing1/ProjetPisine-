@@ -30,7 +30,7 @@ function times(start: number, end: number, block: any) {
 }
 
 /**
- * This function test if the two given parameters are equal.
+ * This function tests if the two given parameters are equal.
  * 
  * Example:
  *  {{#eq 1 5}}     returns false
@@ -38,9 +38,27 @@ function times(start: number, end: number, block: any) {
  * 
  * @param left the left hand operator assignement
  * @param right the right hand operator assignement
+ * 
+ * @returns `true` if `left == right`, else returns `false`
  */
 function eq(left: any, right: any): boolean {
     return left == right;
+}
+
+/**
+ * This function tests fi the two given parameters are unequal.
+ * 
+ * Example!
+ *  {{#neq 1 1}}        returns false
+ *  {{#neq "a" "b"}}    returns true
+ * 
+ * @param left the left hand operator assignement
+ * @param right the right hand operator assignement
+ * 
+ * @returns `true` if `left != right`, else returns `false`
+ */
+function neq(left: any, right: any): boolean {
+    return left != right;
 }
 
 /**
@@ -83,4 +101,4 @@ function getTime(date: Date): string {
     return moment(date).format("hh:mm");
 }
 
-export default {times, eq, add, formatDate, getDate, getTime};
+export default {times, eq, neq, add, formatDate, getDate, getTime};

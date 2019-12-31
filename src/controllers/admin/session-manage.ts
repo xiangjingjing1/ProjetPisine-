@@ -2,6 +2,7 @@ import {Request, Response} from "express";
 import {Subject, ExamSession, Group, Specialty, GroupParticipation} from "../../models";
 import {checkSentData} from "./sessions-create";
 import sq from "sequelize";
+import sequelize from "../../models/connection";
 
 function get(req: Request, res: Response, otherData: object = {}) {
 
@@ -48,11 +49,105 @@ function post(req: Request, res: Response) {
             case "update":
                 updateSession(req, res, session);
                 break;
+            case "start":
+                startSession(req, res, session);
+                break;
+            case "stop":
+                stopSession(req, res, session);
+                break;
+            case "delete":
+                deleteSession(req, res, session);
+                break;
             default:
-                res.sendStatus(500); // Bad request
+                res.sendStatus(400); // Bad request
         }
 
     }).catch(() => {});
+}
+
+function deleteSession(req: Request, res: Response, session: ExamSession) {
+
+    if(session.state == ExamSession.IN_PROGRESS) {
+        return get(req, res, {errors: ["Impossible de supprimer cette session d'examen. La session d'examen est en cours."]});
+    }
+    
+    session.destroy().then(() => {
+
+        res.redirect("/admin/sessions");
+
+    }).catch((err: any) => {
+        console.error(err);
+        res.render("admin/admin-sessions-manage", {
+            name: "Gérer une session d'examen",
+            errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."]
+        });
+    });
+
+}
+
+function stopSession(req: Request, res: Response, session: ExamSession) {
+
+    /**
+     * To be stopped, an exam session must be in IN_PROGRESS state
+     */
+    if(session.state != ExamSession.IN_PROGRESS) {
+        return get(req, res, {errors: ["Impossible d'arrêter une session d'examen qui ne soit pas en cours."]});
+    }
+
+    session.update({
+        state: ExamSession.FINISHED,
+    }).then(() => {
+    
+        get(req, res, {successes: ["La session d'examen est maintenant terminée."]});
+        
+    }).catch((err: any) => {
+        console.error(err);
+        res.render("admin/admin-sessions-manage", {
+            name: "Gérer une session d'examen",
+            errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."]
+        });
+    });
+
+}
+
+function startSession(req: Request, res: Response, session: ExamSession) {
+
+    /**
+     * To be started, an exam session must be in WAITING state
+     */
+    if(session.state != ExamSession.WAITING) {
+        return get(req, res, {errors: ["Seules les sessions d'examen en attente peuvent être lancées."]});
+    }
+
+    /**
+     * Delete all stored answers from previous exam sessions for all users participating to this
+     * exam session
+     */
+    sequelize.query(`DELETE FROM StudentAnswers
+                     WHERE StudentAnswers.UserId IN (
+                        SELECT Users.id
+                        FROM Users
+                        INNER JOIN UserGroups ON Users.id = UserGroups.UserId
+                        INNER JOIN Groups ON UserGroups.GroupId = Groups.id
+                        INNER JOIN GroupParticipations ON Groups.id = GroupParticipations.GroupId
+                        WHERE GroupParticipations.ExamSessionId = ${session.id}
+                    )`, {
+                            raw: true,
+                        }
+    ).then(() => {
+        return session.update({
+            state: ExamSession.IN_PROGRESS,
+        });
+    }).then(() => {
+        get(req, res, {successes: ["La session d'examen a bien été lancée"]});
+    }).catch((err: any) => {
+        console.error(err);
+        res.render("admin/admin-sessions-manage", {
+            name: "Gérer une session d'examen",
+            errors: ["Une erreur est survenue sur le serveur. Contactez un administrateur."]
+        });
+    });
+
 }
 
 function updateSession(req: Request, res: Response, session: ExamSession) {
@@ -70,7 +165,7 @@ function updateSession(req: Request, res: Response, session: ExamSession) {
      */
     let data = checkSentData(req.body);
     if(typeof data == "string") {
-        res.status(500).send(data); // Bad request
+        res.status(400).send(data); // Bad request
         return;
     }
 
