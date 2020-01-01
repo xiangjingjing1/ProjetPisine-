@@ -86,7 +86,7 @@ function formatDate(date: Date): string {
 /**
  * Format the given date to only return day, month and year
  * 
- * @param date the date format
+ * @param date the date to format
  */
 function getDate(date: Date): string {
     return moment(date).locale("fr").format("YYYY-MM-DD");
