@@ -80,7 +80,7 @@ function add(i: number, k: number): number {
  * @param date the date to format
  */
 function formatDate(date: Date): string {
-    return moment(date).locale("fr-FR").format("dddd DD/MM/YYYY hh:mm");
+    return moment(date).locale("fr-FR").format("dddd DD/MM/YYYY HH:mm");
 }
 
 /**
@@ -89,7 +89,7 @@ function formatDate(date: Date): string {
  * @param date the date format
  */
 function getDate(date: Date): string {
-    return moment(date).format("YYYY-MM-DD");
+    return moment(date).locale("fr").format("YYYY-MM-DD");
 }
 
 /**
@@ -98,7 +98,7 @@ function getDate(date: Date): string {
  * @param date the date to format
  */
 function getTime(date: Date): string {
-    return moment(date).format("hh:mm");
+    return moment(date).locale("fr").format("HH:mm");
 }
 
 export default {times, eq, neq, add, formatDate, getDate, getTime};

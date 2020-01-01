@@ -1,3 +1,56 @@
 <h1>Liste des sessions</h1>
 
-<!-- TODO: List session -->
+{{#if sessions.length}}
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">N°</th>
+                <th scope="col">Date</th>
+                <th scope="col">Etat</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each sessions}}
+                <tr>
+                    <td class="text-muted">#{{this.id}}</td>
+                    <td>{{formatDate this.date}}</td>
+                    <td>
+                        {{#if (eq this.state 0)}}
+                            <span class="badge badge-warning">En attente</span>
+                        {{/if}}
+
+                        {{#if (eq this.state 1)}}
+                            <span class="badge badge-success">En cours</span>
+                        {{/if}}
+
+                        {{#if (eq this.state -1)}}
+                            <span class="badge badge-danger">Terminé</span>
+                        {{/if}}
+                        
+                    </td>
+                    <td><a href="/student/sessions/{{this.id}}">
+
+                        {{#if (eq this.state 0)}}
+                            Entrer dans le salon d'attente
+                        {{/if}}
+
+                        {{#if (eq this.state 1)}}
+                            Répondre aux questions
+                        {{/if}}
+
+                        {{#if (eq this.state -1)}}
+                            Voir vos résultats
+                        {{/if}}
+
+                    </a></td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+{{else}}
+
+    <h3 class="text-center">Pas de session d'examen</h3>
+
+{{/if}}

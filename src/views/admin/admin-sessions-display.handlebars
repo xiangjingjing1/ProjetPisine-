@@ -10,6 +10,7 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th scope="col">N°</th>
                 <th scope="col">Sujet</th>
                 <th scope="col">Date</th>
                 <th scope="col">Etat</th>
@@ -19,6 +20,7 @@
         <tbody>
             {{#each sessions}}
                 <tr>
+                    <td class="text-muted">#{{this.id}}</td>
                     <td>{{this.Subject.name}}</td>
                     <td>{{formatDate this.date}}</td>
                     <td>
@@ -37,7 +39,6 @@
                     </td>
                     <td><a href="/admin/sessions/{{this.id}}/manage">Gérer</a></td>
                 </tr>
-                <!--  -->
             {{/each}}
         </tbody>
     </table>

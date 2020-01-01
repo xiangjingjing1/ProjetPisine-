@@ -10,9 +10,9 @@ function registerRoutes(app: Express) {
 
     app.get("/", ensureLoggedIn(), (req, res) => {
         if((req.user as User).isAdmin) {
-            res.redirect("/admin/session");
+            res.redirect("/admin/sessions");
         } else {
-            res.redirect("/student/session");
+            res.redirect("/student/sessions");
         }
     });
 
