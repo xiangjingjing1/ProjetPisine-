@@ -6,6 +6,13 @@ module.exports = function(grunt) {
     const {exec} = require("child_process");
   
     grunt.initConfig({
+
+      env: {
+        dev: {
+          BLUEBIRD_WARNINGS: 0
+        }
+      },
+
       ts: {
         app: {
           files: [{
@@ -114,6 +121,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-webpack");
     grunt.loadNpmTasks('grunt-express-server');
+    grunt.loadNpmTasks("grunt-env");
 
     grunt.registerTask("compile", [
       "ts",
@@ -124,6 +132,7 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask("default", [
+      "env:dev",
       "compile",
       "express:dev",
       "watch"
