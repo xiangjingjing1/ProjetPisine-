@@ -43,13 +43,10 @@ function init(io: SocketIO.Server) {
                     return null;
                 }
 
-                /**
-                 * The user is an admin, we make him join admin room
-                 */
-
-                let count = (sessionsToUsersIds[session.id] || []).length;
-
-                socket.emit("connected-count", count);
+                socket.join(`session-${session.id}`, () => {
+                    let count = (sessionsToUsersIds[session.id] || []).length;
+                    socket.emit("connected-count", count);
+                });
 
             }).catch((err: any) => {
                 console.error(err);
@@ -110,11 +107,11 @@ function init(io: SocketIO.Server) {
 
                 let count = usersList.length;
 
-                adminNS.emit("connected-count", count);
+                adminNS.to(`session-${session.id}`).emit("connected-count", count);
 
                 socket.on("disconnect", () => {
                     sessionsToUsersIds[sessionId] = sessionsToUsersIds[sessionId].filter((id) => id != user.id);
-                    adminNS.emit("connected-count", sessionsToUsersIds[sessionId].length);
+                    adminNS.to(`session-${session.id}`).emit("connected-count", sessionsToUsersIds[sessionId].length);
                 });
 
             }).catch((err: any) => {
