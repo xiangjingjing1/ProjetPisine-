@@ -1,0 +1,75 @@
+<h1>Résultats de la session d'examen</h1>
+
+<table class="table text-center table-bordered">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Listening Part</th>
+            <th scope="col">Score</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#times 0 3}}
+            <tr>
+                <td>Partie {{lookup (lookup ../results this) 'part'}}</td>
+                <td>{{lookup (lookup ../results this) 'score'}}/{{lookup (lookup ../parts (add this 1)) 'count'}}</td>
+            </tr>
+        {{/times}}
+    </tbody>
+
+    <thead class="thead-light">
+        <tr>
+            <th scope="row">Listening total</th>
+            <th>{{totals.listening.normal}}/100</th>
+        </tr>
+        <tr>
+            <th scope="row">Listening converted total</th>
+            <th>{{totals.listening.converted}}/495</th>
+        </tr>
+    </thead>
+
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Reading Part</th>
+            <th scope="col">Score</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {{#times 4 6}}
+            <tr>
+                <td>Partie {{lookup (lookup ../results this) 'part'}}</td>
+                <td>{{lookup (lookup ../results this) 'score'}}/{{lookup (lookup ../parts (add this 1)) 'count'}}</td>
+            </tr>
+        {{/times}}
+    </tbody>
+
+    <thead class="thead-light">
+        <tr>
+            <th scope="row">Reading total</th>
+            <th>{{totals.reading.normal}}/100</th>
+        </tr>
+        <tr>
+            <th scope="row">Reading converted total</th>
+            <th>{{totals.reading.converted}}/495</th>
+        </tr>
+    </thead>
+
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Total</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr>
+            <th scope="row">Total score</th>
+            <td>{{add totals.reading.normal totals.listening.normal}}/200</td>
+        </tr>
+        <tr>
+            <th scope="row">Total converted score</th>
+            <td>{{add totals.reading.converted totals.listening.converted}}/990</td>
+        </tr>
+    </tbody>
+</table>

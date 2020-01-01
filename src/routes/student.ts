@@ -19,6 +19,7 @@ function registerRoutes(app: Express) {
      * This route leads to page where student can answer to questions.
      */
     router.get("/sessions/:id", ensureLoggedIn(), sessionDisplay.get);
+    router.post("/sessions/:id", ensureLoggedIn(), sessionDisplay.post);
 
     app.use("/student", router);
 }

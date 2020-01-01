@@ -1,0 +1,90 @@
+<div id="inProgressSection"
+
+    {{#if (neq session.state 1)}}
+        style="display: none;"
+    {{/if}}
+
+>
+    <h1>Questionnaire TOEIC</h1>
+    <br/>
+
+    <form method="POST">
+        {{>questions}}
+        <input class="btn btn-primary" type="submit" value="Envoyer">
+    </form>
+
+        
+</div>
+
+<div id="waitingSection"
+
+    {{#if (neq session.state 0)}}
+        style="display: none;"
+    {{/if}}
+
+>
+    <h1 class="display-4 text-center">En attente de démarrage</h1>
+    <h1 class="display-4 text-center">. . .</h1>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket = io("/student");
+
+    socket.on('start', () => {
+
+        document.getElementById("waitingSection").style.display = "none";
+        document.getElementById("inProgressSection").style.display = "block";
+
+    });
+
+    socket.on('connect', () => {
+
+        socket.emit("join-session", "{{session.id}}");
+
+    });
+
+    function storageAvailable(type) {
+        try {
+            var storage = window[type],
+                x = '__storage_test__';
+            storage.setItem(x, x);
+            storage.removeItem(x);
+            return true;
+        }
+        catch(e) {
+            return e instanceof DOMException && (
+                // everything except Firefox
+                e.code === 22 ||
+                // Firefox
+                e.code === 1014 ||
+                // test name field too, because code might not be present
+                // everything except Firefox
+                e.name === 'QuotaExceededError' ||
+                // Firefox
+                e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+                // acknowledge QuotaExceededError only if there's something already stored
+                storage.length !== 0;
+        }
+    }
+
+    if(storageAvailable("localStorage")) {
+
+        const sessionId = /^\/student\/sessions\/(\d+)/.exec(document.location.pathname)[1];
+        document.querySelectorAll('input[data-type="answer"]').forEach((radio) => {
+
+            if(localStorage.getItem(`${sessionId}-${radio.dataset.num}`) == radio.value) {
+                radio.checked = true;
+            }
+
+            radio.addEventListener("input", (e) => {
+                try {
+                    localStorage.setItem(`${sessionId}-${e.target.dataset.num}`, e.target.value);
+                } catch (e) {
+                    Object.keys(localStorage).filter((key) => !key.startsWith(`${sessionId}-`)).forEach((key) => localStorage.removeItem(key));
+                }
+            });
+        });
+
+    }
+</script>
