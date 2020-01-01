@@ -4,7 +4,6 @@ import User from "./user";
 
 class StudentAnswer extends sq.Model {
 
-    public id!: number;
     public num!: number;
     public answer!: number;
     public userId!: number;
@@ -18,6 +17,7 @@ StudentAnswer.init({
             min: 1,
             max: 100,
         },
+        primaryKey: true,
     },
     answer: {
         type: sq.SMALLINT,
@@ -29,8 +29,13 @@ StudentAnswer.init({
         validate: {
             min: 1,
             max: 4,
-        }
+        },
     },
+    UserId: {
+        type: sq.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+    }
 }, {
     sequelize,
     timestamps: false,

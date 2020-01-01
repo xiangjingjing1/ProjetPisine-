@@ -14,7 +14,7 @@ class ExamSession extends sq.Model {
     public id!: number;
     public date!: Date;
     public state!: number;
-    public subjectId!: number;
+    public SubjectId!: number;
 
     public getGroups!: BelongsToManyGetAssociationsMixin<Group>;
     public addGroup!: BelongsToManyAddAssociationMixin<Group, number>;
@@ -66,7 +66,24 @@ GroupParticipation.init({
     timestamps: false,
 });
 
-ExamSession.belongsTo(Subject);
+// ExamSession <=> Subject association
+ExamSession.belongsTo(Subject, {
+    onDelete: 'CASCADE',
+    foreignKey: {
+        name: 'SubjectId',
+        allowNull: false,
+    }
+});
+Subject.hasMany(ExamSession, {
+    sourceKey: 'id',
+    foreignKey: {
+        name: 'SubjectId',
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+});
+
+// ExamSession <=> Group association
 ExamSession.belongsToMany(Group, {
     through: GroupParticipation,
     foreignKey: {
@@ -75,6 +92,30 @@ ExamSession.belongsToMany(Group, {
     },
     onDelete: "CASCADE"
 });
-ExamResult.belongsTo(ExamSession);
+Group.belongsToMany(ExamSession, {
+    through: GroupParticipation,
+    foreignKey: {
+        name: "GroupId",
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+});
+
+// ExamSession <=> ExamResult association
+ExamResult.belongsTo(ExamSession, {
+    foreignKey: {
+        name: "ExamSessionId",
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+});
+ExamSession.hasMany(ExamResult, {
+    sourceKey: 'id',
+    foreignKey: {
+        name: "ExamSessionId",
+        allowNull: false,
+    },
+    onDelete: 'CASCADE',
+});
 
 export {ExamSession, GroupParticipation};

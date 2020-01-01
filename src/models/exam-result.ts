@@ -4,11 +4,11 @@ import User from "./user";
 
 class ExamResult extends sq.Model {
 
-    public id!: number;
     public part!: number;
     public score!: number;
-    public userId!: number;
-    public examSessionId!: number;
+    public UserId!: number;
+    public ExamSessionId!: number;
+
 }
 
 ExamResult.init({
@@ -18,6 +18,7 @@ ExamResult.init({
         validate: {
             min: 1,
         },
+        primaryKey: true,
     },
     score: {
         type: sq.SMALLINT.UNSIGNED,
@@ -26,6 +27,16 @@ ExamResult.init({
             min: 0,
         }
     },
+    UserId: {
+        type: sq.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+    },
+    ExamSessionId: {
+        type: sq.INTEGER,
+        allowNull: false,
+        primaryKey: true,
+    }
 }, {
     sequelize,
     timestamps: false,

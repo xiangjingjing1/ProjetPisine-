@@ -8,6 +8,8 @@ class Subject extends sq.Model {
     public id!: number;
     public name!: String;
 
+    public readonly answers?: CorrectAnswer[];
+
     public static associations: {
         answers: Association<Subject, CorrectAnswer>
     };
