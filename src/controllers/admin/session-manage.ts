@@ -3,6 +3,7 @@ import {Subject, ExamSession, Group, Specialty, GroupParticipation} from "../../
 import {checkSentData} from "./sessions-create";
 import sq from "sequelize";
 import sequelize from "../../models/connection";
+import {io} from "../../app";
 
 function get(req: Request, res: Response, otherData: object = {}) {
 
@@ -139,6 +140,7 @@ function startSession(req: Request, res: Response, session: ExamSession) {
             state: ExamSession.IN_PROGRESS,
         });
     }).then(() => {
+        io.of("/student").to(`session-${session.id}`).emit("start");
         get(req, res, {successes: ["La session d'examen a bien été lancée"]});
     }).catch((err: any) => {
         console.error(err);

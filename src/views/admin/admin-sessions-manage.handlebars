@@ -1,4 +1,20 @@
-<h1 class="title">Gérer une session d'examen</h1>
+<a href="/admin/sessions" class="btn btn-link">&LeftArrow; Retour</a>
+
+<h1 class="title">Gérer une session d'examen
+
+    {{#if (eq session.state 0)}}
+        <span class="badge badge-warning">En attente</span>
+    {{/if}}
+
+    {{#if (eq session.state 1)}}
+        <span class="badge badge-success">En cours</span>
+    {{/if}}
+
+    {{#if (eq session.state -1)}}
+        <span class="badge badge-danger">Terminé</span>
+    {{/if}}
+
+</h1>
 <hr>
 
 <h3>Gestion :</h3>

@@ -1,17 +1,42 @@
-<a class="btn btn-primary" href="/student/sessions" >Retour</a>
-<br/>
-<br/>
+<a class="btn btn-link" href="/student/sessions" >&LeftArrow; Retour</a>
 
-<h1>Questionnaire TOEIC</h1>
-<br/>
+<div id="inProgressSection"
 
-{{>questions}}
-	
-<input class="btn btn-primary" type="submit" value="Envoyer">
+    {{#if (neq session.state 1)}}
+        style="display: none;"
+    {{/if}}
+
+>
+    <h1>Questionnaire TOEIC</h1>
+    <br/>
+
+    {{>questions}}
+        
+    <input class="btn btn-primary" type="submit" value="Envoyer">
+</div>
+
+<div id="waitingSection"
+
+    {{#if (neq session.state 0)}}
+        style="display: none;"
+    {{/if}}
+
+>
+    <h1 class="display-4 text-center">En attente de démarrage</h1>
+    <h1 class="display-4 text-center">. . .</h1>
+</div>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io("/student");
+
+    socket.on('start', () => {
+
+        document.getElementById("waitingSection").style.display = "none";
+        document.getElementById("inProgressSection").style.display = "block";
+
+    });
+
     socket.on('connect', () => {
 
         socket.emit("join-session", "{{session.id}}");

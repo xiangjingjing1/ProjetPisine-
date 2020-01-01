@@ -1,5 +1,5 @@
 import SocketIO from "socket.io";
-import {User, ExamSession} from "../../models";
+import {User, ExamSession, Group} from "../../models";
 
 var userToSocket: {[userId: number]: SocketIO.Socket} = {};
 var sessionsToUsersIds: {[sessionId: number]: number[]} = {};
@@ -84,7 +84,16 @@ function init(io: SocketIO.Server) {
                 socket.emit("wrong-session");
             }
 
-            ExamSession.findByPk(sessionId).then((session: ExamSession | null) => {
+            ExamSession.findOne({
+                include: [{
+                    model: Group,
+                    include: [User],
+                }],
+                where: {
+                    "$Groups.Users.id$": user.id,
+                    "id": sessionId,
+                }
+            }).then((session: ExamSession | null) => {
 
                 if(session == null) {
                     socket.emit("wrong-session");
@@ -101,10 +110,6 @@ function init(io: SocketIO.Server) {
                     usersList.push(user.id);
                 }
 
-                /**
-                 * The user is an admin, we make him join admin room
-                 */
-
                 let count = usersList.length;
 
                 adminNS.to(`session-${session.id}`).emit("connected-count", count);
@@ -113,6 +118,8 @@ function init(io: SocketIO.Server) {
                     sessionsToUsersIds[sessionId] = sessionsToUsersIds[sessionId].filter((id) => id != user.id);
                     adminNS.to(`session-${session.id}`).emit("connected-count", sessionsToUsersIds[sessionId].length);
                 });
+
+                socket.join(`session-${session.id}`);
 
             }).catch((err: any) => {
                 console.error(err);
