@@ -34,6 +34,7 @@ function init(io: SocketIO.Server) {
             let sessionId = parseInt(data);
             if(isNaN(sessionId)) {
                 socket.emit("wrong-session");
+                return;
             }
 
             ExamSession.findByPk(sessionId).then((session: ExamSession | null) => {
@@ -82,6 +83,7 @@ function init(io: SocketIO.Server) {
             let sessionId = parseInt(data);
             if(isNaN(sessionId)) {
                 socket.emit("wrong-session");
+                return;
             }
 
             ExamSession.findOne({
