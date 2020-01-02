@@ -27,6 +27,18 @@
     <h1 class="display-4 text-center">. . .</h1>
 </div>
 
+<div id="finishedSection" style="display: none;">
+
+    <h1 class="display-4 text-center">Terminé !</h1>
+    <p class="text-center">
+        <button class="btn btn-outline-primary" onclick="document.location = document.location">
+            Rafraichissez la page pour voir vos résultats
+            &circlearrowleft;
+        </button>
+    </p>
+
+</div>
+
 <script src="/socket.io/socket.io.js"></script>
 <script>
     var socket = io("/student");
@@ -35,6 +47,13 @@
 
         document.getElementById("waitingSection").style.display = "none";
         document.getElementById("inProgressSection").style.display = "block";
+
+    });
+
+    socket.on('end', () => {
+
+        document.getElementById("inProgressSection").style.display = "none";
+        document.getElementById("finishedSection").style.display = "block";
 
     });
 

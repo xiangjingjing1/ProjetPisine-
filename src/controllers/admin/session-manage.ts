@@ -98,6 +98,8 @@ function stopSession(req: Request, res: Response, session: ExamSession) {
     session.update({
         state: ExamSession.FINISHED,
     }).then(() => {
+
+        io.of("/student").to(`session-${session.id}`).emit("end");
     
         get(req, res, {successes: ["La session d'examen est maintenant terminée."]});
         

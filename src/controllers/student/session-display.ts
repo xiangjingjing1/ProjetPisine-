@@ -115,7 +115,7 @@ function post(req: Request, res: Response) {
             ExamSessionId: session.id,
         }));
 
-        return ExamSession.bulkCreate(scoreRecords, {
+        return ExamResult.bulkCreate(scoreRecords, {
             updateOnDuplicate: ["score"]
         });
 
@@ -141,6 +141,7 @@ const catchError = (req: Request, res: Response) => (err: any) => {
             res.sendStatus(400);
             break;
         default:
+            console.error(err);
             res.render(VIEW_PATH, {name: VIEW_NAME, errors: ["Une erreur est survenue sur le serveur. Actualisez la page et ré-essayez. \
             Si l'erreur persiste, contactez un administrateur."]});
     }
