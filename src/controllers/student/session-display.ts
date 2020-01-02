@@ -100,10 +100,10 @@ function post(req: Request, res: Response) {
             if(sentAnswer != undefined && sentAnswer == answer.answer) {
                 let part = findPartFromQuestion(answer.num);
                 if(part != null) {
-                    if(scores[answer.num] == undefined) {
-                        scores[answer.num] = 0;
+                    if(scores[part] == undefined) {
+                        scores[part] = 0;
                     }
-                    scores[answer.num] += 1;
+                    scores[part] += 1;
                 }
             }
         });
