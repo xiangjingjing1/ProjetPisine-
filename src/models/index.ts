@@ -5,7 +5,6 @@ import ExamResult from "./exam-result";
 import {ExamSession, GroupParticipation} from "./exam-session";
 import {Group, UserGroup} from "./group";
 import Specialty from "./specialty";
-import StudentAnswer from "./student-answer";
 import Subject from "./subject";
 
 async function init() {
@@ -32,4 +31,4 @@ async function init() {
     }
 }
 
-export {init, User, CorrectAnswer, ExamResult, ExamSession, Group, Specialty, StudentAnswer, Subject, UserGroup, GroupParticipation};
+export {init, User, CorrectAnswer, ExamResult, ExamSession, Group, Specialty, Subject, UserGroup, GroupParticipation};

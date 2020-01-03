@@ -123,24 +123,10 @@ function startSession(req: Request, res: Response, session: ExamSession) {
     }
 
     /**
-     * Delete all stored answers from previous exam sessions for all users participating to this
-     * exam session
+     * Update session state
      */
-    sequelize.query(`DELETE FROM StudentAnswers
-                     WHERE StudentAnswers.UserId IN (
-                        SELECT Users.id
-                        FROM Users
-                        INNER JOIN UserGroups ON Users.id = UserGroups.UserId
-                        INNER JOIN Groups ON UserGroups.GroupId = Groups.id
-                        INNER JOIN GroupParticipations ON Groups.id = GroupParticipations.GroupId
-                        WHERE GroupParticipations.ExamSessionId = ${session.id}
-                    )`, {
-                            raw: true,
-                        }
-    ).then(() => {
-        return session.update({
-            state: ExamSession.IN_PROGRESS,
-        });
+    session.update({
+        state: ExamSession.IN_PROGRESS,
     }).then(() => {
         io.of("/student").to(`session-${session.id}`).emit("start");
         get(req, res, {successes: ["La session d'examen a bien été lancée"]});
