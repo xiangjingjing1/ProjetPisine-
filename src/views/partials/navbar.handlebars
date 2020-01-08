@@ -9,32 +9,37 @@
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="navbar-nav mr-auto">
 
-      {{#if user.isAdmin}}
-      
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/groups">Groupes et spécialités</a>
-        </li>
+      {{#if user}}
 
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/subjects">Sujets d'examen</a>
-        </li>
+        {{#if user.isAdmin}}
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/groups">Groupes et spécialités</a>
+          </li>
 
-        <li class="nav-item">
-          <a class="nav-link" href="/admin/sessions">Sessions d'examen</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/subjects">Sujets d'examen</a>
+          </li>
 
-        <li class="nav-items">
-          <a class="nav-link" href="/admin/statistiques">Statistiques</a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/sessions">Sessions d'examen</a>
+          </li>
 
-      {{else}}
+          <li class="nav-item">
+            <a class="nav-link" href="/admin/statistiques">Statistiques</a>
+          </li>
 
-        <li class="nav-item">
-            <a class="nav-link" href="/student/sessions">Sessions d'examen</a>
-        </li>
-        <li class="nav-items">
+        {{else}}
+
+          <li class="nav-item">
+              <a class="nav-link" href="/student/sessions">Sessions d'examen</a>
+          </li>
+
+          <li class="nav-item">
             <a class="nav-link" href="/student/statistiques">Statistiques</a>
-        </li>
+          </li>
+
+        {{/if}}
 
       {{/if}}
 
