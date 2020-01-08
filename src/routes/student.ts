@@ -2,7 +2,7 @@ import { Express, Router } from "express";
 import sessionDisplay from "../controllers/student/session-display";
 import sessionList from "../controllers/student/session-list";
 import {ensureLoggedIn} from "connect-ensure-login";
-import stats from "../controllers/student/stats-student"
+import stats from "../controllers/student/stats-student";
 
 /**
  * Registers routes used for exam sessions.
