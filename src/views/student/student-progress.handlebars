@@ -1,52 +1,54 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title> ma progression</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-</head>
-<body>
+
     <h1>ma progression</h1>
     <div style="width:75%">
     <canvas id="myChart"></canvas>
     </div>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
     <script>
 
-        fetch("/api/results/for/7").then((res) => res.json()).then((results) => {
-            labels = results.map((el) => el.date)
-            scores = results.map((session) => {
-                let r = session.ExamResults.filter((result) => result.part == 1);
-                if (r.length == 0) {
-                    return 0;
+        fetch("/api/results/for/{{user.id}}").then((res) => res.json()).then((results) => {
+            var labels = results.map((el) => {
+                let date = new Date(el.date);
+                return ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear();
+            });
+
+            function getScoresForPart(i) {
+                return results.map((session) => {
+                    let r = session.ExamResults.filter((result) => result.part == i);
+            
+                    if (r.length == 0) {
+                        return 0;
+                    }
+                    return r[0].score;
+                })
+            }
+
+            var datasets = [1, 2, 3, 4, 5, 6, 7].map((i) => {
+                let scores = getScoresForPart(i)
+                return {
+                    label: `Part ${i}`,
+                    borderColor: `rgb(${255 / 7 * (8 - i)}, 99, ${255/7*i})`,
+                
+                    data: scores
                 }
-                return r.score;
+            });
+           
+            var ctx = document.getElementById('myChart').getContext('2d');
+            var chart = new Chart(ctx, {
+            
+                    type: 'line',
+
+                    // The data for our dataset
+                    data: {
+                    labels: labels,
+                    datasets,
+                },
+                // Configuration options go here
+                options: {}
             });
         });
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var chart = new Chart(ctx, {
-        
-        type: 'line',
-
-        // The data for our dataset
-        data: {
-        labels: {{labels}},
-        datasets: [{
-            label: 'My First dataset',
-            //backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
-            data: {{scores}}
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-    });
     </script>
-</body>
-
-</html>
 
 
 
