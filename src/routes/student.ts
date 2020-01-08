@@ -2,6 +2,7 @@ import { Express, Router } from "express";
 import sessionDisplay from "../controllers/student/session-display";
 import sessionList from "../controllers/student/session-list";
 import {ensureLoggedIn} from "connect-ensure-login";
+import stats from "../controllers/student/stats-student"
 
 /**
  * Registers routes used for exam sessions.
@@ -20,6 +21,8 @@ function registerRoutes(app: Express) {
      */
     router.get("/sessions/:id", ensureLoggedIn(), sessionDisplay.get);
     router.post("/sessions/:id", ensureLoggedIn(), sessionDisplay.post);
+
+    router.get("/stats", ensureLoggedIn(), stats.get);
 
     app.use("/student", router);
 }
