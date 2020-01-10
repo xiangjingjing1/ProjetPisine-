@@ -1,23 +1,37 @@
 import {Request, Response} from "express";
 import * as models from "../../models";
-import sq from "sequelize";
+import sq, { Model } from "sequelize";
 import sequelize from "../../models/connection";
 
 function get(req: Request, res: Response) {
 
-    sequelize.query(`SELECT AVG("score_sum") AS average, MIN("score_sum") AS min, MAX("score_sum") AS max, name
-                    FROM (
-                        SELECT SUM("score") AS score_sum, ExamSessionId
-                        FROM ExamResults
-                        GROUP BY ExamSessionId
-                    ) AS sb
-                    INNER JOIN ExamSessions ES ON ES.id = ExamSessionId
-                    INNER JOIN Subjects S on ES.SubjectId = S.id
-                    GROUP BY S.id
-    `, {
-        raw: true,
-    }).then((results) => {
-        res.json(results[0]);
+    models.ExamResult.findAll({
+        attributes: [[sq.fn("SUM", sq.col("score")), "score_sum"]],
+        include: [{
+            model: models.ExamSession,
+            attributes: ["SubjectId"],
+            include: [{
+                model: models.Subject,
+                attributes: ["name"],
+            }]
+        }],
+        group: ["ExamSessionId"]
+    }).then((results: Array<any>) => {
+        let prep_processed: any = results.map((result: any) => ({
+            score_sum: result.dataValues.score_sum,
+            name: result.ExamSession.Subject.name,
+        })).reduce((acc: {[subjectName: string]: Array<{score_sum: number, name: string}>}, value: {score_sum: number, name: string}) => {
+            (acc[value.name] = acc[value.name] || []).push(value);
+            return acc;
+        }, {});
+
+        let processed = Object.values(prep_processed).map((values: Array<{score_sum: number, name: string}>) => ({
+            average: values.reduce((acc, value) => acc + value.score_sum, 0) / values.length,
+            max: Math.max(... values.map((value) => value.score_sum)),
+            min: Math.min(... values.map((value) => value.score_sum)),
+        }));
+
+        res.json(processed);
     }).catch((err: any) => {
         console.error(err);
         res.sendStatus(500);
