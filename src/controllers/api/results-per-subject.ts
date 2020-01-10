@@ -9,16 +9,19 @@ function get(req: Request, res: Response) {
         attributes: [[sq.fn("SUM", sq.col("score")), "score_sum"]],
         include: [{
             model: models.ExamSession,
+            attributes: [],
             include: [{
                 model: models.Subject,
                 attributes: ["name"],
             }]
         }],
-        group: ["ExamSession.id"]
-    }).then((results: Array<any>) => {
+        group: ["ExamSession.id"],
+        raw: true,
+    }, ).then((results: Array<any>) => {
+        console.log(results);
         let prep_processed: any = results.map((result: any) => ({
-            score_sum: result.dataValues.score_sum,
-            name: result.ExamSession.Subject.name,
+            score_sum: result.score_sum,
+            name: result['ExamSession.Subject.name'],
         })).reduce((acc: {[subjectName: string]: Array<{score_sum: number, name: string}>}, value: {score_sum: number, name: string}) => {
             (acc[value.name] = acc[value.name] || []).push(value);
             return acc;
