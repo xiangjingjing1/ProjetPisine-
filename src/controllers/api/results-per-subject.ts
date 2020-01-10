@@ -14,7 +14,7 @@ function get(req: Request, res: Response) {
                 attributes: ["name"],
             }]
         }],
-        group: ["ExamSessionId"]
+        group: ["ExamSession.id"]
     }).then((results: Array<any>) => {
         let prep_processed: any = results.map((result: any) => ({
             score_sum: result.dataValues.score_sum,
