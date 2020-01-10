@@ -15,7 +15,7 @@ function get(req: Request, res: Response) {
                 attributes: ["name"],
             }]
         }],
-        group: [sq.col("ExamSession.Subject.id"), sq.col("UserId")],
+        group: ["ExamSession.id", "ExamSession.Subject.id", "UserId"],
         raw: true,
     }, ).then((results: Array<any>) => {
         let prep_processed: any = results.map((result: any) => ({
