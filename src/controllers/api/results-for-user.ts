@@ -16,6 +16,7 @@ function get(req: Request, res: Response) {
         }],
         where: {
             "$ExamResults.UserId$": userId,
+            "state": models.ExamSession.FINISHED,
         },
         order: [["date", "ASC"]]
     }).then((results) => {
