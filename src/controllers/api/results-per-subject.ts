@@ -15,10 +15,9 @@ function get(req: Request, res: Response) {
                 attributes: ["name"],
             }]
         }],
-        group: ["ExamSession.id"],
+        group: [sq.col("ExamSession.Subject.id"), sq.col("UserId")],
         raw: true,
     }, ).then((results: Array<any>) => {
-        console.log(results);
         let prep_processed: any = results.map((result: any) => ({
             score_sum: result.score_sum,
             name: result['ExamSession.Subject.name'],
