@@ -4,6 +4,7 @@ module.exports = {
         bootstrap: './static/js/bootstrap.js',
         groupsCheckboxs: './static/js/groups-checkboxs.js',
         studentCharts: './static/js/student-charts.js',
+        adminCharts: './static/js/admin-charts.js',
     },
     output: {
         filename: "[name].js",

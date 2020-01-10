@@ -9,6 +9,7 @@ import subjectsDelete from "../controllers/admin/subjects-delete";
 import sessionsDisplay from "../controllers/admin/sessions-display";
 import sessionsCreate from "../controllers/admin/sessions-create";
 import sessionManage from "../controllers/admin/session-manage";
+import stats from "../controllers/admin/stats";
 
 /**
  * Registers all routes relative to administration.
@@ -57,17 +58,22 @@ function registerRoutes(app: Express) {
     router.get("/sessions", sessionsDisplay.get);
 
     /**
-     * These routes allows administrator to create an exam session.
+     * These routes allow administrator to create an exam session.
      */
     router.get("/sessions/create", sessionsCreate.get);
     router.post("/sessions/create", sessionsCreate.post);
     
     /**
-     * These routes allows administrator to manage an exam session (modify subject, datetime, participating groups but
+     * These routes allow administrator to manage an exam session (modify subject, datetime, participating groups but
      * also starting, remove and stop it).
      */
     router.get("/sessions/:sessionId/manage", sessionManage.get);
     router.post("/sessions/:sessionId/manage", sessionManage.post);
+
+    /**
+     * This route allows administrator to consult global statistics over exam sessions
+     */
+    router.get("/stats", stats.get);
 
     app.use("/admin", router);
 }
