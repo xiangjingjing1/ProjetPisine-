@@ -1,10 +1,8 @@
 import {Request, Response} from "express";
 
-
-
-function get(req:Request, res:Response){
+function get(req: Request, res: Response){
     res.render('student/student-progress',{
-        name: 'my progress'
+        name: 'Progression'
     });
 }
 
