@@ -3,6 +3,7 @@ module.exports = {
     entry: {
         bootstrap: './static/js/bootstrap.js',
         groupsCheckboxs: './static/js/groups-checkboxs.js',
+        studentCharts: './static/js/student-charts.js',
     },
     output: {
         filename: "[name].js",
