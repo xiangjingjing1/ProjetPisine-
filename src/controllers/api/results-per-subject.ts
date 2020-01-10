@@ -9,7 +9,6 @@ function get(req: Request, res: Response) {
         attributes: [[sq.fn("SUM", sq.col("score")), "score_sum"]],
         include: [{
             model: models.ExamSession,
-            attributes: ["SubjectId"],
             include: [{
                 model: models.Subject,
                 attributes: ["name"],
