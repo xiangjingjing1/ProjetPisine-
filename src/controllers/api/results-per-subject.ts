@@ -10,7 +10,7 @@ function get(req: Request, res: Response) {
                         SELECT SUM("score") AS score_sum, ExamSessionId
                         FROM ExamResults
                         GROUP BY ExamSessionId
-                    )
+                    ) AS sb
                     INNER JOIN ExamSessions ES ON ES.id = ExamSessionId
                     INNER JOIN Subjects S on ES.SubjectId = S.id
                     GROUP BY S.id
