@@ -10,6 +10,7 @@ import sessionsDisplay from "../controllers/admin/sessions-display";
 import sessionsCreate from "../controllers/admin/sessions-create";
 import sessionManage from "../controllers/admin/session-manage";
 import stats from "../controllers/admin/stats";
+import studentsList from "../controllers/admin/students-list";
 
 /**
  * Registers all routes relative to administration.
@@ -74,6 +75,11 @@ function registerRoutes(app: Express) {
      * This route allows administrator to consult global statistics over exam sessions
      */
     router.get("/stats", stats.get);
+
+    /**
+     * This route allows administrator to list all students and select one to see its profile
+     */
+    router.get("/students/list", studentsList.get);
 
     app.use("/admin", router);
 }

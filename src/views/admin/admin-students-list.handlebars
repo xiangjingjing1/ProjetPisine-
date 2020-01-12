@@ -1,0 +1,78 @@
+<h1>Liste des étudiants</h1>
+<hr>
+
+{{#if users.length}}
+
+    <div class="form-group">
+        <label for="searchBar">Rechercher :</label>
+        <input type="text" class="form-control" role="search" placeholder="Rechercher" id="searchBar">
+    </div>
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th scope="col">Nom</th>
+                <th scope="col">Prenom</th>
+                <th scope="col">E-mail</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody id="studentsList">
+
+            {{#each users}}
+
+                <tr class="searchable">
+                    <td>{{this.lastname}}</td>
+                    <td>{{this.firstname}}</td>
+                    <td>{{this.email}}</td>
+                    <td><a href="/admin/students/consult/{{this.id}}">Consulter</a></td>
+                </tr>
+
+            {{/each}}
+
+            <tr id="notFoundRow" style="display: none">
+                <td colspan="4" class="text-center"><b>Aucun étudiant ne correspond à la recherche</b></td>
+            </tr>
+
+        </tbody>
+
+    </table>
+
+    <script>
+
+        document.getElementById("searchBar").addEventListener("input", (e) => {
+            const searchBar = e.target;
+            const searchValue = searchBar.value.toLowerCase();
+
+            var count = 0;
+
+            document.querySelectorAll(".searchable").forEach((row) => {
+                var children = Array.from(row.children);
+                children.pop(); // Remove "Consulter" data
+
+                if(children.some((data) => data.innerText.toLowerCase().includes(searchValue))) {
+                    count += 1;
+                    row.style.display = "contents";
+                } else {
+                    row.style.display = "none";
+                }
+
+            })
+
+            if(count == 0) {
+                document.getElementById("notFoundRow").style.display = "contents";
+            } else {
+                document.getElementById("notFoundRow").style.display = "none";
+            }
+
+        });
+
+    </script>
+
+{{else}}
+
+    <h3 class="text-center">Pas d'étudiants</h3>
+
+{{/if}}
