@@ -17,8 +17,18 @@ fetch("/api/results/per/subject").then((res) => res.json()).then((results) => {
         options: {
             scales: {
                 yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Nombre de réponse justes"
+                    },
                     ticks: {
                         suggestedMin: 0,
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Nom du sujet",
                     }
                 }]
             }
