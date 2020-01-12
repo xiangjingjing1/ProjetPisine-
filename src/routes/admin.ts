@@ -11,6 +11,7 @@ import sessionsCreate from "../controllers/admin/sessions-create";
 import sessionManage from "../controllers/admin/session-manage";
 import stats from "../controllers/admin/stats";
 import studentsList from "../controllers/admin/students-list";
+import studentConsult from "../controllers/admin/student-consult";
 
 /**
  * Registers all routes relative to administration.
@@ -66,7 +67,7 @@ function registerRoutes(app: Express) {
     
     /**
      * These routes allow administrator to manage an exam session (modify subject, datetime, participating groups but
-     * also starting, remove and stop it).
+     * also start, remove and stop it).
      */
     router.get("/sessions/:sessionId/manage", sessionManage.get);
     router.post("/sessions/:sessionId/manage", sessionManage.post);
@@ -80,6 +81,11 @@ function registerRoutes(app: Express) {
      * This route allows administrator to list all students and select one to see its profile
      */
     router.get("/students/list", studentsList.get);
+
+    /**
+     * This route allows administrator to consult student profile
+     */
+    router.get("/students/consult/:userId", studentConsult.get);
 
     app.use("/admin", router);
 }

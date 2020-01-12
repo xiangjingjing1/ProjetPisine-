@@ -1,0 +1,68 @@
+<a href="/admin/students/list" class="btn btn-link">&LeftArrow; Retour</a>
+
+<h1>Profil d'étudiant</h1>
+
+<br>
+
+<div class="card">
+    <div class="card-body">
+        <div class="from-group row">
+            <label for="lastname" class="col-sm-4 col-md-3 col-lg-3 col-form-label"><b>Nom de famille :</b></label>
+            <div class="col-sm-8 col-md-8 col-lg-9">
+                <input type="text" readonly class="form-control-plaintext" id="lastname" value="{{student.lastname}}">
+            </div>
+        </div>
+        <div class="from-group row">
+            <label for="firstname" class="col-sm-4 col-md-3 col-lg-3 col-form-label"><b>Prénom :</b></label>
+            <div class="col-sm-8 col-md-9 col-lg-9">
+                <input type="text" readonly class="form-control-plaintext" id="firstname" value="{{student.firstname}}">
+            </div>
+        </div>
+        <div class="from-group row">
+            <label for="email" class="col-sm-4 col-md-3 col-lg-3 col-form-label"><b>Email :</b></label>
+            <div class="col-sm-8 col-md-9 col-lg-9">
+                <input type="text" readonly class="form-control-plaintext" id="email" value="{{student.email}}">
+            </div>
+        </div>
+        <div class="from-group row">
+            <label for="specialty" class="col-sm-4 col-md-3 col-lg-3 col-form-label"><b>Spécialité :</b></label>
+            <div class="col-sm-8 col-md-9 col-lg-9">
+                <input type="text" readonly class="form-control-plaintext" id="specialty" 
+                
+                    {{#if group}}
+                        value="{{group.specialty.name}}{{group.specialty.year}}"
+                    {{else}}
+                        value="Pas de spécialité"
+                    {{/if}}
+                
+                >
+            </div>
+        </div>
+        <div class="from-group row">
+            <label for="group" class="col-sm-4 col-md-3 col-lg-3 col-form-label"><b>Groupe :</b></label>
+            <div class=" col-sm-8 col-md-9 col-lg-9">
+                <input type="text" readonly class="form-control-plaintext" id="group" 
+                
+                    {{#if group}}
+                        value="{{group.num}}"
+                    {{else}}
+                        value="Pas de groupe"
+                    {{/if}}
+                
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+
+<h2>Listening / Reading / Total</h2>
+<canvas id="globalChart"></canvas>
+
+<h2>Progression par partie</h2>
+<canvas id="partsChart"></canvas>
+
+<input type="hidden" id="student-id" data-userid="{{student.id}}">
+<script src="/static/js/studentCharts.js"></script>
+
