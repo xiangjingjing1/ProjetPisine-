@@ -1,7 +1,6 @@
 import {Request, Response} from "express";
 import * as models from "../../models";
-import sq, { Model } from "sequelize";
-import sequelize from "../../models/connection";
+import sq from "sequelize";
 
 function get(req: Request, res: Response) {
 
@@ -13,7 +12,10 @@ function get(req: Request, res: Response) {
             include: [{
                 model: models.Subject,
                 attributes: ["name"],
-            }]
+            }],
+            where: {
+                state: models.ExamSession.FINISHED,
+            }
         }],
         group: ["ExamSession.id", "ExamSession.Subject.id", "UserId"],
         raw: true,
