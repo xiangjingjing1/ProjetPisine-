@@ -18,8 +18,6 @@ function get(req: Request, res: Response) {
         group: ["ExamSession.id", "ExamSession.Subject.id", "UserId"],
         raw: true,
     }, ).then((results: Array<any>) => {
-        console.log("Results: ");
-        console.log(results);
 
         let prep_processed: any = results.map((result: any) => ({
             score_sum: result.score_sum,
@@ -28,15 +26,16 @@ function get(req: Request, res: Response) {
             (acc[value.name] = acc[value.name] || []).push(value);
             return acc;
         }, {});
-        console.log("Pre-processed :");
-        console.log(prep_processed);
 
-        let processed = Object.values(prep_processed).map((values: Array<{score_sum: number, name: string}>) => ({
-            average: values.reduce((acc, value) => acc + value.score_sum, 0) / values.length,
-            max: Math.max(... values.map((value) => value.score_sum)),
-            min: Math.min(... values.map((value) => value.score_sum)),
-            name: values[0].name,
-        }));
+        let processed = Object.values(prep_processed).map((values: Array<{score_sum: string, name: string}>) => {
+            let mappedToNumber: Array<number> = values.map((value) => parseInt(value.score_sum));
+            return {
+                average: mappedToNumber.reduce((acc, value) => acc + value, 0) / values.length,
+                max: Math.max(... mappedToNumber),
+                min: Math.min(... mappedToNumber),
+                name: values[0].name,
+            };
+        });
 
         res.json(processed);
     }).catch((err: any) => {
