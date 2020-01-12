@@ -12,4 +12,12 @@ const ensureAdmin = () => function(req: Request, res: Response, next: NextFuncti
     }
 };
 
-export {ensureAdmin};
+const ensureStudent = () => function(req: Request, res: Response, next: NextFunction) {
+    if(req.user != null && (req.user as User).isAdmin) {
+        res.status(403).redirect("/"); // Forbidden
+    } else {
+        next();
+    }
+};
+
+export {ensureAdmin, ensureStudent};
