@@ -1,5 +1,29 @@
 <a class="btn btn-link" href="/student/sessions" >&LeftArrow; Retour</a>
 
+<form name="form1" method="post" action="">
+  <p class="text-md-left" id="textarea"></p>
+<script language="javascript">
+var second=0;
+var minute=0;
+var hour=0;
+window.setTimeout("interval();",1000);
+function interval()
+{
+	second++;
+	if(second==60)
+	{
+	second=0;minute+=1;
+	}
+	if(minute==60)
+	{
+	minute=0;hour+=1;
+	}
+	document.getElementById("textarea").innerHTML= "Ca fait "+hour+" h "+minute+" mins "+second+" seconds que vous êtes sur la session";
+	window.setTimeout("interval();",1000);
+}
+</script>
+</form>
+
 {{#if (eq session.state -1)}}
     {{> studentSessionDisplayFinished}}
 {{else}}
