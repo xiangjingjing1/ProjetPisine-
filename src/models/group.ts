@@ -10,6 +10,9 @@ class Group extends sq.Model {
     public num!: number;
     public specialtyId!: number;
 
+    public specialty?: Specialty;
+    public Users?: User[];
+
     public addUser!: BelongsToManyAddAssociationMixin<User, number>;
 
 }

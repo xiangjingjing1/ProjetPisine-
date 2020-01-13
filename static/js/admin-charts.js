@@ -36,3 +36,40 @@ fetch("/api/results/per/subject").then((res) => res.json()).then((results) => {
     });
 
 });
+
+fetch("/api/results/per/specialty").then((res) => res.json()).then((results) => {
+
+    let ctx = document.getElementById("perSpecialtyChart").getContext('2d');
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: results.map((result) => `${result.name}${result.year}`),
+            datasets: [["min", "Minimum", "red"], ["average", "Moyenne", "orange"], ["max", "Maximum", "green"]].map((attr) => ({
+                label: attr[1],
+                data: results.map((result) => result[attr[0]]),
+                borderColor: attr[2],
+                backgroundColor: attr[2],
+            }))
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Nombre de réponse justes"
+                    },
+                    ticks: {
+                        suggestedMin: 0,
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Nom de la spécialité",
+                    }
+                }]
+            }
+        }
+    });
+
+});
