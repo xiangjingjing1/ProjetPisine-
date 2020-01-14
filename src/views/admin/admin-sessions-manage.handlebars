@@ -23,6 +23,13 @@
     {{#if (neq session.state -1)}}
         Nombre d'étudiants connectés : <strong id="connectedCount">0</strong>
         <br><br>
+
+    {{else}}
+
+        <button class="btn btn-block btn-primary" id="downloadPDF">Télécharger les résultats</button>
+        <input type="hidden" id="sessionId" data-sessionid="{{session.id}}">
+        <br>
+
     {{/if}}
 
     {{#if (eq session.state 0)}}
@@ -90,5 +97,9 @@
         });
         
     </script>
+
+{{else}}
+
+    <script src="/static/js/pdf.js"></script>
 
 {{/if}}

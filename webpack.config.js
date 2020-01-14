@@ -5,6 +5,7 @@ module.exports = {
         groupsCheckboxs: './static/js/groups-checkboxs.js',
         studentCharts: './static/js/student-charts.js',
         adminCharts: './static/js/admin-charts.js',
+        pdf: './static/js/pdf.js',
     },
     output: {
         filename: "[name].js",

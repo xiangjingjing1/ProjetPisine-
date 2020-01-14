@@ -19,6 +19,8 @@ class ExamSession extends sq.Model {
     public getGroups!: BelongsToManyGetAssociationsMixin<Group>;
     public addGroup!: BelongsToManyAddAssociationMixin<Group, number>;
 
+    public Groups?: Group[];
+
 }
 
 ExamSession.init({

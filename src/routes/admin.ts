@@ -12,6 +12,7 @@ import sessionManage from "../controllers/admin/session-manage";
 import stats from "../controllers/admin/stats";
 import studentsList from "../controllers/admin/students-list";
 import studentConsult from "../controllers/admin/student-consult";
+import sessionResults from "../controllers/admin/sessions-results";
 
 /**
  * Registers all routes relative to administration.
@@ -71,6 +72,8 @@ function registerRoutes(app: Express) {
      */
     router.get("/sessions/:sessionId/manage", sessionManage.get);
     router.post("/sessions/:sessionId/manage", sessionManage.post);
+
+    router.get("/sessions/:sessionId/results", sessionResults.get);
 
     /**
      * This route allows administrator to consult global statistics over exam sessions
