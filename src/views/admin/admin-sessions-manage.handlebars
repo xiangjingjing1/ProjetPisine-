@@ -20,8 +20,10 @@
 <h3>Gestion :</h3>
 <br>
 
-    Nombre d'étudiants connectés : <strong id="connectedCount">0</strong>
-    <br><br>
+    {{#if (neq session.state -1)}}
+        Nombre d'étudiants connectés : <strong id="connectedCount">0</strong>
+        <br><br>
+    {{/if}}
 
     {{#if (eq session.state 0)}}
         <form method="POST">
@@ -71,17 +73,22 @@
 </form>
 
 <script type="text/javascript" src="/static/js/groupsCheckboxs.js"></script>
-<script src="/socket.io/socket.io.js"></script>
-<script>
-    var socket = io("/admin");
 
-    socket.on("connected-count", (data) => {
-        document.getElementById("connectedCount").innerText = data;
-    });
+{{#if (neq session.state -1)}}
 
-    socket.on('connect', () => {
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io("/admin");
 
-        socket.emit("join-session", "{{session.id}}");
-    });
-    
-</script>
+        socket.on("connected-count", (data) => {
+            document.getElementById("connectedCount").innerText = data;
+        });
+
+        socket.on('connect', () => {
+
+            socket.emit("join-session", "{{session.id}}");
+        });
+        
+    </script>
+
+{{/if}}
