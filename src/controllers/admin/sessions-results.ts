@@ -67,8 +67,7 @@ function get(req: Request, res: Response) {
 
         session.Groups.forEach((group) => {
             speIdToSpe[group.specialty.id] = group.specialty;
-            console.log(`Spe: ${group.specialty.name}${group.specialty.year} / Users for group ${group.num}: ${group.Users.length}`);
-            speIdToResults[group.specialty.id] = group.Users.map((user) => {
+            let mappedResults = group.Users.map((user) => {
                 let result = perUserResults[user.id] || {listening: 0, reading: 0};
                 return {
                     lastname: user.lastname,
@@ -79,11 +78,8 @@ function get(req: Request, res: Response) {
                     }
                 };
             });
+            (speIdToResults[group.specialty.id] = speIdToResults[group.specialty.id] || []).push(... mappedResults);
         });
-
-        console.log("speIdToResults :");
-        console.log(speIdToResults);
-        console.log();
 
         var ret: any = {};
         ret["date"] = moment(session.date).locale("fr").format("DD-MM-YYYY HH:mm");
