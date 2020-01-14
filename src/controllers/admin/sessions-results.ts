@@ -27,7 +27,6 @@ function get(req: Request, res: Response) {
             where: {
                 ExamSessionId: req.params.sessionId,
             },
-            raw: true,
         })
     ]).then(([session, results]: [ExamSession, ExamResult[]]) => {
 
