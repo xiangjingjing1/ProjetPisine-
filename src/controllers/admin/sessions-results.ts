@@ -67,6 +67,7 @@ function get(req: Request, res: Response) {
 
         session.Groups.forEach((group) => {
             speIdToSpe[group.specialty.id] = group.specialty;
+            console.log(`Spe: ${group.specialty.name}${group.specialty.year} / Users for group ${group.num}: ${group.Users.length}`);
             speIdToResults[group.specialty.id] = group.Users.map((user) => {
                 let result = perUserResults[user.id] || {listening: 0, reading: 0};
                 return {
