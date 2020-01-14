@@ -83,9 +83,10 @@ function registerRoutes(app: Express) {
     router.get("/students/list", studentsList.get);
 
     /**
-     * This route allows administrator to consult student profile
+     * These route allows administrator to consult student profile and delete user
      */
     router.get("/students/consult/:userId", studentConsult.get);
+    router.post("/students/consult/:userId", studentConsult.post);
 
     app.use("/admin", router);
 }

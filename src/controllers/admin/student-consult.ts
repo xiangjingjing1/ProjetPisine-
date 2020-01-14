@@ -3,7 +3,7 @@ import {User, Group, Specialty} from "../../models";
 
 const NOT_FOUND = new Error("Not found");
 
-function get(req: Request, res: Response) {
+function get(req: Request, res: Response, otherData: object = {}) {
     
     User.findByPk(req.params.userId).then((user: User | null) => {
 
@@ -35,6 +35,7 @@ function get(req: Request, res: Response) {
             name: "Profil étudiant",
             student: user,
             group,
+            ...otherData,
         });
 
     }).catch((err: any) => {
@@ -54,4 +55,15 @@ function get(req: Request, res: Response) {
 
 }
 
-export default {get};
+function post(req: Request, res: Response) {
+
+    User.findByPk(req.params.userId).then((user: User) => user.destroy()).then(() => {
+        res.redirect("/admin/students/list");
+    }).catch((err: any) => {
+        console.error(err);
+        get(req, res, {errors: ["L'utilisateur n'a pas pu être supprimé"]});
+    });
+
+}
+
+export default {get, post};

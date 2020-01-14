@@ -52,6 +52,8 @@
                 >
             </div>
         </div>
+        <br>
+        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirmModal">Supprimer l'utilisateur</button>
     </div>
 </div>
 
@@ -66,3 +68,39 @@
 <input type="hidden" id="student-id" data-userid="{{student.id}}">
 <script src="/static/js/studentCharts.js"></script>
 
+<div class="modal" tabindex="-1" role="dialog" id="confirmModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de la suppression</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fermer">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="confirmField" class="col-form-label">
+                            Etes vous sûr de vouloir supprimer le sujet l'utilisateur <b>{{student.lastname}} {{student.firstname}}</b> ?<br>
+                            Pour confirmer la suppression veuillez taper {{student.lastname}} {{student.firstname}} dans le champ ci-dessous.<br/><br/>
+                        <div class="text-danger">Attention ! Cette action est irréversible.</div>
+                        </label>
+                        <input type="text" class="form-control" id="confirmField" placeholder="{{student.lastname}} {{student.firstname}}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Annuler</button>
+                    <input type="submit" value="Supprimer" class="btn btn-danger" disabled>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Delete confirmation
+    let confirmButton = document.querySelector('#confirmModal input[type="submit"]');
+    document.getElementById("confirmField").addEventListener("input", (e) => {
+        confirmButton.disabled = e.target.value != "{{student.lastname}} {{student.firstname}}";
+    });
+</script>
