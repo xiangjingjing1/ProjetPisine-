@@ -80,12 +80,9 @@ function get(req: Request, res: Response) {
             });
         });
 
-        console.log("perUserResults :");
-        console.log(perUserResults);
+        console.log("speIdToResults :");
+        console.log(speIdToResults);
         console.log();
-
-        console.log("speIdToSpe:");
-        console.log(speIdToSpe);
 
         var ret: any = {};
         ret["date"] = moment(session.date).locale("fr").format("DD-MM-YYYY HH:mm");
