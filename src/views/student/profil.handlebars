@@ -1,0 +1,23 @@
+<h1>Table au bord</h1>
+<h3>Bonjour {{user.firstname}}</h3>
+
+<h4>Information personnel</h4>
+<p>Nom : {{user.lastname}}</p>
+<p>Prénom : {{user.firstname}}</p>
+<p>Group : {{user.group.num}}</p>
+<p>Spécialité : {{user.specialty.name}}</p>
+
+<div class="container">
+  <div class="row" id="row-container">
+    <p>Consulter les sessions</p>
+    <a class="btn btn-secondary" href="/student/sessions" id="btn-consulter">Consulter</a>
+  </div>
+  <div class="row" id="row-container">
+    <p>Changer le mot de passe</p>
+    <a class="btn btn-secondary" id="btn-consulter">Consulter</a>
+  </div>
+  <div class="row" id="row-container">
+    <p>Voir le statistique</p>
+    <a class="btn btn-secondary" href="/student/stats" id="btn-consulter">Consulter</a>
+  </div>
+</div>

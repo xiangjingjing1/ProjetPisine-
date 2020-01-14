@@ -1,7 +1,7 @@
 @import "../../node_modules/bootstrap/scss/bootstrap.scss";
 
 html {
-    min-height: 100%; 
+    min-height: 100%;
     position: relative;
 }
 
@@ -21,4 +21,13 @@ body {
     padding-top: 20px;
     padding-bottom: 20px;
     overflow: hidden;
+}
+
+#btn-consulter {
+  margin-left: 30px;
+}
+
+#row-container {
+  margin-top: 20px;
+  margin-bottom: 30px;
 }

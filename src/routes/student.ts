@@ -4,6 +4,7 @@ import sessionList from "../controllers/student/session-list";
 import {ensureLoggedIn} from "connect-ensure-login";
 import {ensureStudent} from "../middlewares/admin-middleware";
 import stats from "../controllers/student/stats-student";
+import profil from "../controllers/student/student-index";
 
 /**
  * Registers routes used for exam sessions.
@@ -22,7 +23,7 @@ function registerRoutes(app: Express) {
      * This route leads to a page which will list all sessions the user can participate or did participate.
      */
     router.get("/sessions", sessionList.get);
-    
+
     /**
      * This route leads to page where student can answer to questions.
      */
@@ -31,7 +32,20 @@ function registerRoutes(app: Express) {
 
     router.get("/stats", stats.get);
 
+    router.get("/profil", profil.get);
+
     app.use("/student", router);
+    /**
+    * Modification password
+    */
+    router.get("/updatePassword", (req,res) => {
+      let user = {
+        username: req.query.name,
+        oldPassword: req.query.oldPassword,
+        newPassword: req.query.newPassword,
+        againPassword: req.query.againPassword
+      }
+    })
 }
 
 export default registerRoutes;
