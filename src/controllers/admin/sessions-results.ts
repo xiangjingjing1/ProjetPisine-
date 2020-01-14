@@ -30,6 +30,13 @@ function get(req: Request, res: Response) {
         })
     ]).then(([session, results]: [ExamSession, ExamResult[]]) => {
 
+        console.log("Results :");
+        console.log(results);
+        console.log();
+
+        console.log("Session:");
+        console.log(session);
+
         if(session.state != ExamSession.FINISHED) {
             res.sendStatus(403); // Forbidden
             return;
