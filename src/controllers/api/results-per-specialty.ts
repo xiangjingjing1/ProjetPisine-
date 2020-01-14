@@ -35,7 +35,7 @@ function get(req: Request, res: Response) {
                     (specialtyIdToResult[group.specialty.id] = specialtyIdToResult[group.specialty.id] || []).push(... userResults);
                 }
             });
-            speIdToSpe[group.id] = group.specialty;
+            speIdToSpe[group.specialty.id] = group.specialty;
         });
 
         let resultsPerSpecialty = Object.keys(specialtyIdToResult).map((speId: string) => {
