@@ -5,7 +5,7 @@ import {ensureLoggedIn} from "connect-ensure-login";
 import {ensureStudent} from "../middlewares/admin-middleware";
 import stats from "../controllers/student/stats-student";
 import profil from "../controllers/student/student-index";
-
+import updatepassword from "../controllers/student/profil-password";
 /**
  * Registers routes used for exam sessions.
  */
@@ -33,19 +33,12 @@ function registerRoutes(app: Express) {
     router.get("/stats", stats.get);
 
     router.get("/profil", profil.get);
-
-    app.use("/student", router);
     /**
     * Modification password
     */
-    router.get("/updatePassword", (req,res) => {
-      let user = {
-        username: req.query.name,
-        oldPassword: req.query.oldPassword,
-        newPassword: req.query.newPassword,
-        againPassword: req.query.againPassword
-      }
-    })
+    router.get("/updatepassword", updatepassword.get);
+    app.use("/student", router);
+
 }
 
 export default registerRoutes;
