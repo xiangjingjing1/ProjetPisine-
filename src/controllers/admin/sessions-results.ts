@@ -30,13 +30,6 @@ function get(req: Request, res: Response) {
         })
     ]).then(([session, results]: [ExamSession, ExamResult[]]) => {
 
-        console.log("Results :");
-        console.log(results);
-        console.log();
-
-        console.log("Session:");
-        console.log(session);
-
         if(session.state != ExamSession.FINISHED) {
             res.sendStatus(403); // Forbidden
             return;
@@ -86,6 +79,13 @@ function get(req: Request, res: Response) {
                 };
             });
         });
+
+        console.log("perUserResults :");
+        console.log(perUserResults);
+        console.log();
+
+        console.log("speIdToSpe:");
+        console.log(speIdToSpe);
 
         var ret: any = {};
         ret["date"] = moment(session.date).locale("fr").format("DD-MM-YYYY HH:mm");
