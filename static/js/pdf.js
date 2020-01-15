@@ -11,7 +11,7 @@ fetch(`/admin/sessions/${sessionId}/results`).then((res) => res.json()).then((re
                     user.firstname,
                     specialty.name,
                     `${user.result.listening}/495`,
-                    `${user.result.listening}/495`,
+                    `${user.result.reading}/495`,
                     `${user.result.listening + user.result.reading}/990`
                 ]
         })

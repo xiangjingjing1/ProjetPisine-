@@ -1,7 +1,7 @@
 import {Request, Response} from "express";
 import {Subject, CorrectAnswer} from "../../models";
 
-const QUESTIONS_COUNT = 5; // TODO: Change questions count
+const QUESTIONS_COUNT = 200;
 
 function get(req: Request, res: Response, other: object = {}) {
     res.render("admin/admin-subjects-create", {"name": "Créer un sujet d'examen", ...other});
